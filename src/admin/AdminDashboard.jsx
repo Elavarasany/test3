@@ -47,7 +47,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim() || (import.meta.e
 const ENDPOINTS = {
   products: `${API_BASE_URL}/admin/products`,
   orders: `${API_BASE_URL}/admin/orders`,
-  customers: `${API_BASE_URL}/admin/orders/customers`,
+  customers: `${API_BASE_URL}/admin/customer-accounts`,
   appointments: `${API_BASE_URL}/appointments`,
   banners: `${API_BASE_URL}/admin/marketing/banners`,
   offers: `${API_BASE_URL}/admin/marketing/offers`,
@@ -4183,44 +4183,27 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
   }, [customers, search]);
 
   useEffect(() => {
-    if (!selected) {
+    if (!selected?.id) {
       setHistoryOrders([]);
       setHistoryPageInfo({ number: 0, totalPages: 0, totalElements: 0, last: true });
       setHistoryError("");
-      setHistoryLoading(false);
       return undefined;
     }
-
     let active = true;
-    const params = new URLSearchParams({ page: "0", size: "25" });
-    if (selected.email?.trim()) params.set("email", selected.email.trim());
-    else if (selected.phone?.trim()) params.set("phone", selected.phone.trim());
-
-    setHistoryOrders([]);
-    setHistoryPageInfo({ number: 0, totalPages: 0, totalElements: 0, last: true });
     setHistoryLoading(true);
     setHistoryError("");
-
-    api.getJson(`${ENDPOINTS.customers}/history?${params.toString()}`, "Unable to load this customer's order history")
+    api.getJson(`${ENDPOINTS.customers}/${selected.id}/history`, "Unable to load customer purchase history")
       .then((data) => {
         if (!active || !data) return;
-        setHistoryOrders(Array.isArray(data.content) ? data.content : []);
-        setHistoryPageInfo({
-          number: Number(data.number || 0),
-          totalPages: Number(data.totalPages || 0),
-          totalElements: Number(data.totalElements || 0),
-          last: Boolean(data.last),
-        });
+        const rows = Array.isArray(data.history) ? data.history : [];
+        setHistoryOrders(rows);
+        setHistoryPageInfo({ number: 0, totalPages: 1, totalElements: rows.length, last: true });
       })
-      .catch((err) => {
-        if (active) setHistoryError(err.message || "Unable to load this customer's order history");
-      })
-      .finally(() => {
-        if (active) setHistoryLoading(false);
-      });
-
+      .catch((err) => { if (active) setHistoryError(err.message || "Unable to load customer purchase history"); })
+      .finally(() => { if (active) setHistoryLoading(false); });
     return () => { active = false; };
-  }, [api, selected?.email, selected?.phone, selectedKey]);
+  }, [api, selected?.id, selectedKey]);
+
 
   const loadMoreHistory = async () => {
     if (!selected || historyLoading || historyPageInfo.last) return;
@@ -4262,8 +4245,8 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
   return (
     <section className="admin-content">
       <PageHeading
-        title="Customers"
-        description="Manage your registered shopping customers."
+        title="Customer Accounts"
+        description="One customer profile for online orders and in-store POS purchases."
         action={<RefreshButton onClick={onReload} loading={loading} />}
       />
 
@@ -4296,14 +4279,15 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                   <th scope="col">Customer</th>
                   <th scope="col">Email</th>
                   <th scope="col">Phone</th>
-                  <th scope="col">Total Orders</th>
+                  <th scope="col">Online</th>
+                  <th scope="col">In-store</th>
                   <th scope="col">Total Spent</th>
                 </tr>
               </thead>
 
               <tbody>
                 {visibleCustomers.map((customer) => {
-                  const key = customerKey(customer);
+                  const key = customer.id ?? customerKey(customer);
                   const isSelected = key === selectedKey;
 
                   return (
@@ -4323,14 +4307,15 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                       </td>
                       <td>{customer.email || "-"}</td>
                       <td>{customer.phone || "-"}</td>
-                      <td>{customer.totalOrders || 0}</td>
+                      <td>{customer.onlineOrders || 0}</td>
+                      <td>{customer.inStoreSales || 0}</td>
                       <td>{formatINR(customer.totalSpent, true)}</td>
                     </tr>
                   );
                 })}
 
                 {visibleCustomers.length === 0 && (
-                  <EmptyRow colSpan={5}>
+                  <EmptyRow colSpan={6}>
                     {customers.length === 0 ? "No customers found." : "No matching customers found."}
                   </EmptyRow>
                 )}
@@ -4352,7 +4337,7 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                 <div>
                   <h2>{selected.customerName}</h2>
                   <p>{selected.email || "No email"}</p>
-                  <p>{selected.phone || "No phone"}</p>
+                  <p>{selected.phone || "No phone"} · {selected.channel === "BOTH" ? "Online + In-store" : selected.channel === "ONLINE" ? "Online" : "In-store"}</p>
                 </div>
 
                 <button type="button" className="admin-secondary-button" onClick={() => setSelectedKey(null)}>
@@ -4361,9 +4346,9 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                 </button>
               </div>
 
-              <h3>Order History</h3>
+              <h3>Purchase History</h3>
               <p className="admin-help-text">
-                {historyOrders.length} loaded of {historyPageInfo.totalElements} orders for this customer.
+                {historyOrders.length} purchases across online and in-store channels.
               </p>
 
               {historyLoading && historyOrders.length === 0 ? (
@@ -4371,28 +4356,28 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
               ) : historyError && historyOrders.length === 0 ? (
                 <p className="admin-error" role="alert">{historyError}</p>
               ) : historyOrders.length === 0 ? (
-                <p>No orders found for this customer.</p>
+                <p>No purchases found for this customer.</p>
               ) : (
                 <div className="admin-table-wrapper">
                   <table className="admin-table">
                     <thead>
                       <tr>
-                        <th scope="col">Order ID</th>
-                        <th scope="col">Order Date</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Channel</th>
                         <th scope="col">Amount</th>
-                        <th scope="col">Payment</th>
-                        <th scope="col">Delivery Status</th>
+                        <th scope="col">Status</th>
                       </tr>
                     </thead>
 
                     <tbody>
                       {historyOrders.map((order) => (
                         <tr key={order.id}>
-                          <td>#{order.id}</td>
-                          <td>{formatDate(order.orderDate)}</td>
-                          <td>{formatINR(order.totalAmount, true)}</td>
-                          <td>{order.paymentStatus || "-"}</td>
-                          <td>{order.orderStatus || "-"}</td>
+                          <td>{order.reference}</td>
+                          <td>{formatDate(order.date)}</td>
+                          <td>{order.channel === "IN_STORE" ? "In-store POS" : "Online"}</td>
+                          <td>{formatINR(order.total, true)}</td>
+                          <td>{order.status || order.paymentStatus || "-"}</td>
                         </tr>
                       ))}
                     </tbody>
