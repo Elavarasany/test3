@@ -37,12 +37,11 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Admin.css";
+import { API_BASE_URL } from "../config/api";
 
 /* =========================
    CONSTANTS
 ========================= */
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim() || (import.meta.env.DEV ? "http://localhost:8080/api" : "");
 
 const ENDPOINTS = {
   products: `${API_BASE_URL}/admin/products`,
