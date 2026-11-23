@@ -1,33 +1,47 @@
-<<<<<<< HEAD
-# React + Vite
+# NMK Opticals — Customer Website, Admin and POS
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19 + Vite frontend for the NMK Opticals storefront, staff login, admin dashboard and in-store POS.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js **20.19+** or **22.12+** (required by Vite 8).
+- npm (the repository includes `package-lock.json`).
 
-## React Compiler
+## Local setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From the repository root:
 
-## Expanding the Oxlint configuration
+```powershell
+npm ci
+Copy-Item .env.example .env
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+The local example points to the Spring Boot API at `http://localhost:8080/api`. Start the backend separately before testing API-dependent features.
 
+## Backend API configuration
 
-## NMK Opticals POS configuration
+The frontend reads one shared variable: `VITE_API_BASE_URL`.
 
-The POS frontend uses `VITE_API_BASE_URL` for its backend API.
+- Local: `http://localhost:8080/api`
+- Deployed: the full HTTPS backend URL ending in `/api`, for example `https://api.example.com/api`.
 
-- Local development: create a local `.env` with `VITE_API_BASE_URL=http://localhost:8080/api`.
-- Production hosting: configure `VITE_API_BASE_URL` in the frontend hosting provider to the deployed backend origin followed by `/api` (for example, `https://api.example.com/api`). Rebuild and redeploy after changing this variable; Vite embeds it at build time.
-- The production POS no longer silently falls back to `localhost:8080`. If the variable is missing, it shows a configuration error instead of sending requests to the visitor's own computer.
+Vite embeds environment variables at build time. After changing the hosting variable, rebuild and redeploy. A production build with a missing or invalid API URL displays a configuration error instead of silently issuing requests to relative URLs.
 
-The backend must allow the exact deployed frontend origin through `APP_CORS_ALLOWED_ORIGINS` (comma-separated origins, no wildcard). Set `APP_CORS_REQUIRE_HTTPS=true` in production. Configure the database, `JWT_SECRET`, Razorpay credentials and webhook secret as hosting secrets; never commit them.
+The backend must allow the exact frontend origin in `APP_CORS_ALLOWED_ORIGINS`. Do not use wildcard CORS origins with staff credentials.
 
-See the backend repository's `POS_API.md` and POS deployment runbook for API behavior, database prerequisites, migration review, and external integration limitations.
-=======
-# test3
->>>>>>> 8b6a20cb8f65b331bbeaedead8ac932b330b520c
+## Useful commands
+
+```powershell
+npm ci
+npm run dev
+npm run build
+npm run lint
+```
+
+## Security notes
+
+- Never commit `.env` or API credentials.
+- Admin route checks in React are only a user-interface convenience. Backend JWT and role authorization remain the security boundary.
+- Do not treat POS operator-entered cash/card/UPI payment references as gateway-verified payments.
+- See the backend repository's `POS_API.md` and `LOCAL-DATABASE-SETUP.md` for API behavior, schema prerequisites and known release limitations.
