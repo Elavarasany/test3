@@ -278,7 +278,34 @@
 .admin-navigation {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 23px;
+}
+
+.admin-nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.admin-nav-section-items {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-menu-label {
+  margin: 0;
+  padding: 0 12px 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: #91a0b5;
+}
+
+.admin-nav-admin-section {
+  margin-top: 3px;
+  padding-top: 17px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .admin-nav-item {
