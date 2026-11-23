@@ -408,14 +408,13 @@ const PRODUCT_SPECIFICATION_CSV_KEYS = [
 // Multiple values in one cell (lens features, for example) are separated by this
 const CSV_LIST_SEPARATOR = "; ";
 
-const PRODUCT_CSV_REQUIRED = ["category", "gender", "price", "stockQuantity"];
+const PRODUCT_CSV_REQUIRED = ["category", "gender", "price"];
 
 const EMPTY_PRODUCT = {
   gender: "",
   category: "",
   description: "",
   price: "",
-  stockQuantity: "",
   imageUrl: "",
   active: true,
   specifications: {},
@@ -569,7 +568,6 @@ const validateProduct = (form) => {
   if (form.price === "" || !Number.isFinite(Number(form.price)) || Number(form.price) < 0) {
     return "Enter a valid product price.";
   }
-  if (!isWholeNumber(form.stockQuantity)) return "Enter a valid stock quantity.";
   if (form.imageUrl && !isValidHttpUrl(form.imageUrl.trim())) return "Enter a valid product image URL.";
   return null;
 };
@@ -622,7 +620,9 @@ const buildProductPayload = (data) => {
     category: (data.category || "").trim(),
     description: (data.description || "").trim(),
     price: Number(data.price),
-    stockQuantity: Number(data.stockQuantity),
+    // Physical stock is managed only through POS inventory receipts and adjustments.
+    // Keep the legacy non-null database field at zero for backwards compatibility.
+    stockQuantity: 0,
     imageUrl: (data.imageUrl || "").trim(),
     active: data.active,
     specifications,
@@ -639,8 +639,6 @@ const sortValue = (product, key) => {
   switch (key) {
     case "price":
       return Number(product.price ?? 0);
-    case "stock":
-      return Number(product.stockQuantity ?? 0);
     case "status":
       return product.active ? 1 : 0;
     case "category":
@@ -1635,7 +1633,6 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
                 <th scope="col">Product</th>
                 <th scope="col">Category</th>
                 <th scope="col">Price</th>
-                <th scope="col">Legacy stock</th>
                 <th scope="col">Status</th>
               </tr>
             </thead>
@@ -1645,16 +1642,13 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
                   <td>{getProductTitle(product)}</td>
                   <td>{product.category}</td>
                   <td>{formatINR(product.price)}</td>
-                  <td className={isLowStock(product, lowStockThreshold) ? "admin-stock-low" : ""}>
-                    {product.stockQuantity}
-                  </td>
                   <td>
                     <StatusBadge active={product.active} />
                   </td>
                 </tr>
               ))}
 
-              {products.length === 0 && <EmptyRow colSpan={5}>No products to display.</EmptyRow>}
+              {products.length === 0 && <EmptyRow colSpan={4}>No products to display.</EmptyRow>}
             </tbody>
           </table>
         </div>
@@ -1725,7 +1719,7 @@ function CsvColumnsGuide() {
     { name: "category", note: "Required. Must match a category exactly, for example Eyeglasses or Contact Lenses." },
     { name: "gender", note: "Required. Men, Women, Unisex or Kids." },
     { name: "price", note: "Required. Number in rupees, for example 1299." },
-    { name: "stockQuantity", note: "Required. Whole number, 0 or more." },
+    { name: "stockQuantity", note: "Optional legacy column; ignored. Receive physical stock in POS → Inventory." },
     { name: "active", note: "Yes or No. Blank keeps the current value, or Yes for a new product." },
     { name: "imageUrl", note: "Optional. Full https:// link to the product image." },
     { name: "description", note: "Optional. Text may contain commas and quotes." },
@@ -1836,7 +1830,6 @@ const [importingCsv, setImportingCsv] = useState(false);
   const [productNameFilter, setProductNameFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [priceFilter, setPriceFilter] = useState("");
-  const [stockFilter, setStockFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   // Product starts with newest first; each sortable column keeps its own sort key.
   const [sort, setSort] = useState({ key: "recent", direction: "desc" });
@@ -1866,7 +1859,6 @@ const [importingCsv, setImportingCsv] = useState(false);
 matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
           (categoryFilter === "ALL" || p.category === categoryFilter) &&
           String(p.price ?? "").includes(priceFilter.trim()) &&
-          String(p.stockQuantity ?? "").includes(stockFilter.trim()) &&
           (statusFilter === "ALL" || (statusFilter === "ACTIVE") === Boolean(p.active))
       )
       .sort((a, b) => {
@@ -1895,7 +1887,7 @@ matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
 
         return result * direction;
       });
-    }, [products, search, productNameFilter, categoryFilter, priceFilter, stockFilter, statusFilter, sort]);
+    }, [products, search, productNameFilter, categoryFilter, priceFilter, statusFilter, sort]);
 
   const handleSort = (key) =>
     setSort((current) => ({
@@ -1924,7 +1916,6 @@ matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
       category: product.category ?? "",
       description: product.description ?? "",
       price: product.price ?? "",
-      stockQuantity: product.stockQuantity ?? "",
       imageUrl: product.imageUrl ?? "",
       active: product.active ?? true,
       specifications: product.specifications || {},
@@ -1999,7 +1990,7 @@ matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
 
       // "Keep same details": clear only the product-specific fields and stay open
       if (!isEdit && keepDetails) {
-        setForm((prev) => ({ ...prev, name: "", imageUrl: "", price: "", stockQuantity: "" }));
+        setForm((prev) => ({ ...prev, name: "", imageUrl: "", price: "" }));
         onNotice("Product added. Enter the next product's details.");
         await onReload();
         setTimeout(() => document.getElementById("product-gender")?.focus(), 0);
@@ -2095,7 +2086,6 @@ const handleProductCsvImport = async (e) => {
           category,
           description: pick("description", existingProduct?.description),
           price: pick("price", existingProduct?.price),
-          stockQuantity: pick("stockQuantity", existingProduct?.stockQuantity),
           imageUrl: pick("imageUrl", existingProduct?.imageUrl),
           active:
             activeCell === ""
@@ -2303,9 +2293,6 @@ const handleProductCsvImport = async (e) => {
                     {formatINR(product.price, true)}
                   </td>
 
-                  <td data-label="Legacy stock">
-                    {product.stockQuantity ?? 0}
-                  </td>
 
                   <td data-label="Status">
   <button
@@ -2420,19 +2407,6 @@ const handleProductCsvImport = async (e) => {
                 />
               </FormGroup>
 
-              <FormGroup id="product-stock" label="Legacy Stock Quantity (not used for POS availability)" required>
-                <input
-                  id="product-stock"
-                  type="number"
-                  name="stockQuantity"
-                  min="0"
-                  step="1"
-                  value={form.stockQuantity}
-                  onChange={handleChange}
-                  placeholder="Legacy product field only"
-                  required
-                />
-              </FormGroup>
 
               <FormGroup id="product-image" label="Product Image URL" full>
   <input
