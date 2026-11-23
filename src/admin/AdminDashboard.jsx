@@ -757,7 +757,7 @@ map: (p) => {
     category: p.category ?? "",
     gender: p.gender ?? p.specifications?.gender ?? "",
     price: p.price ?? "",
-    stockQuantity: p.stockQuantity ?? "",
+    stockQuantity: "",
     active: p.active ? "Yes" : "No",
     imageUrl: p.imageUrl ?? "",
     description: p.description ?? "",
