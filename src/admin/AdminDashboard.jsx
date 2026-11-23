@@ -37,16 +37,17 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Admin.css";
-import { API_BASE_URL } from "../config/api";
 
 /* =========================
    CONSTANTS
 ========================= */
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim() || (import.meta.env.DEV ? "http://localhost:8080/api" : "");
+
 const ENDPOINTS = {
   products: `${API_BASE_URL}/admin/products`,
   orders: `${API_BASE_URL}/admin/orders`,
-  customers: `${API_BASE_URL}/admin/orders/customers`,
+  customers: `${API_BASE_URL}/admin/customer-accounts`,
   appointments: `${API_BASE_URL}/appointments`,
   banners: `${API_BASE_URL}/admin/marketing/banners`,
   offers: `${API_BASE_URL}/admin/marketing/offers`,
@@ -93,7 +94,7 @@ const MENU_SECTIONS = [
       { name: "Products", label: "Products & Catalogue", icon: Package },
       { name: "Orders", icon: ShoppingCart },
       { name: "Appointments", icon: CalendarDays },
-      { name: "Customers", icon: Users },
+      { name: "Customer Accounts", icon: Users },
       { name: "Marketing", icon: Megaphone },
       { name: "Payment Settlements", icon: Landmark, adminOnly: true },
       { name: "Payment Disputes", icon: ShieldAlert, adminOnly: true },
@@ -408,13 +409,14 @@ const PRODUCT_SPECIFICATION_CSV_KEYS = [
 // Multiple values in one cell (lens features, for example) are separated by this
 const CSV_LIST_SEPARATOR = "; ";
 
-const PRODUCT_CSV_REQUIRED = ["category", "gender", "price"];
+const PRODUCT_CSV_REQUIRED = ["category", "gender", "price", "stockQuantity"];
 
 const EMPTY_PRODUCT = {
   gender: "",
   category: "",
   description: "",
   price: "",
+  stockQuantity: "",
   imageUrl: "",
   active: true,
   specifications: {},
@@ -550,6 +552,9 @@ const LINK_ERROR = "Destination must be a full URL (https://…) or a page path 
 
 const isWholeNumber = (value) => value !== "" && Number.isInteger(Number(value)) && Number(value) >= 0;
 
+const isLowStock = (product, threshold = DEFAULT_PREFS.lowStockThreshold) =>
+  Number(product.stockQuantity) <= threshold;
+
 const customerKey = (customer) => customer.email || customer.phone || customer.customerName || "";
 
 const getImageFileError = (file) => {
@@ -565,6 +570,7 @@ const validateProduct = (form) => {
   if (form.price === "" || !Number.isFinite(Number(form.price)) || Number(form.price) < 0) {
     return "Enter a valid product price.";
   }
+  if (!isWholeNumber(form.stockQuantity)) return "Enter a valid stock quantity.";
   if (form.imageUrl && !isValidHttpUrl(form.imageUrl.trim())) return "Enter a valid product image URL.";
   return null;
 };
@@ -617,9 +623,7 @@ const buildProductPayload = (data) => {
     category: (data.category || "").trim(),
     description: (data.description || "").trim(),
     price: Number(data.price),
-    // Physical stock is managed only through POS inventory receipts and adjustments.
-    // Keep the legacy non-null database field at zero for backwards compatibility.
-    stockQuantity: 0,
+    stockQuantity: Number(data.stockQuantity),
     imageUrl: (data.imageUrl || "").trim(),
     active: data.active,
     specifications,
@@ -636,6 +640,8 @@ const sortValue = (product, key) => {
   switch (key) {
     case "price":
       return Number(product.price ?? 0);
+    case "stock":
+      return Number(product.stockQuantity ?? 0);
     case "status":
       return product.active ? 1 : 0;
     case "category":
@@ -757,7 +763,7 @@ map: (p) => {
     category: p.category ?? "",
     gender: p.gender ?? p.specifications?.gender ?? "",
     price: p.price ?? "",
-    stockQuantity: "",
+    stockQuantity: p.stockQuantity ?? "",
     active: p.active ? "Yes" : "No",
     imageUrl: p.imageUrl ?? "",
     description: p.description ?? "",
@@ -1545,7 +1551,7 @@ const handleFieldChange = (setForm) => (e) => {
 ========================= */
 
 function DashboardPage({ api, products, orders, appointments, refreshing, onRefresh, onViewProducts, onNotice }) {
-  const { dashboardRows } = usePrefs();
+  const { lowStockThreshold, dashboardRows } = usePrefs();
   const [range, setRange] = useState(EMPTY_RANGE);
   const bulk = useBulkClear({ api, onNotice, onReload: onRefresh });
 
@@ -1562,11 +1568,12 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
       upcomingAppointments: bookable.filter((a) => a.appointmentDate > today).length,
       pastAppointments: bookable.filter((a) => a.appointmentDate < today).length,
       totalProducts: products.length,
+      lowStock: products.filter((p) => isLowStock(p, lowStockThreshold)).length,
       totalOrders: filteredOrders.length,
       paidOrders: paid.length,
       revenue: paid.reduce((sum, o) => sum + Number(o.totalAmount || 0), 0),
     };
-  }, [products, orders, appointments, range]);
+  }, [products, orders, appointments, range, lowStockThreshold]);
 
   const cards = [
     { label: "Total Appointments", value: stats.totalAppointments, hint: "Customer eye checkup bookings", icon: CalendarDays, tone: "gold" },
@@ -1576,6 +1583,7 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
     { label: "Total Products", value: stats.totalProducts, hint: "Products in catalogue", icon: Package, tone: "blue" },
     { label: "Total Orders", value: stats.totalOrders, hint: `${stats.paidOrders} paid orders`, icon: ShoppingCart, tone: "gold" },
     { label: "Total Revenue", value: formatINR(stats.revenue), hint: "Successfully paid orders", icon: TrendingUp, tone: "green" },
+    { label: "Low Stock", value: stats.lowStock, hint: `${lowStockThreshold} or fewer units`, icon: AlertTriangle, tone: "red" },
   ];
 
   // Dashboard figures come from orders and appointments, so both are cleared
@@ -1628,6 +1636,7 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
                 <th scope="col">Product</th>
                 <th scope="col">Category</th>
                 <th scope="col">Price</th>
+                <th scope="col">Legacy stock</th>
                 <th scope="col">Status</th>
               </tr>
             </thead>
@@ -1637,13 +1646,16 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
                   <td>{getProductTitle(product)}</td>
                   <td>{product.category}</td>
                   <td>{formatINR(product.price)}</td>
+                  <td className={isLowStock(product, lowStockThreshold) ? "admin-stock-low" : ""}>
+                    {product.stockQuantity}
+                  </td>
                   <td>
                     <StatusBadge active={product.active} />
                   </td>
                 </tr>
               ))}
 
-              {products.length === 0 && <EmptyRow colSpan={4}>No products to display.</EmptyRow>}
+              {products.length === 0 && <EmptyRow colSpan={5}>No products to display.</EmptyRow>}
             </tbody>
           </table>
         </div>
@@ -1714,7 +1726,7 @@ function CsvColumnsGuide() {
     { name: "category", note: "Required. Must match a category exactly, for example Eyeglasses or Contact Lenses." },
     { name: "gender", note: "Required. Men, Women, Unisex or Kids." },
     { name: "price", note: "Required. Number in rupees, for example 1299." },
-    { name: "stockQuantity", note: "Optional legacy column; ignored. Receive physical stock in POS → Inventory." },
+    { name: "stockQuantity", note: "Required. Whole number, 0 or more." },
     { name: "active", note: "Yes or No. Blank keeps the current value, or Yes for a new product." },
     { name: "imageUrl", note: "Optional. Full https:// link to the product image." },
     { name: "description", note: "Optional. Text may contain commas and quotes." },
@@ -1825,6 +1837,7 @@ const [importingCsv, setImportingCsv] = useState(false);
   const [productNameFilter, setProductNameFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [priceFilter, setPriceFilter] = useState("");
+  const [stockFilter, setStockFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   // Product starts with newest first; each sortable column keeps its own sort key.
   const [sort, setSort] = useState({ key: "recent", direction: "desc" });
@@ -1854,6 +1867,7 @@ const [importingCsv, setImportingCsv] = useState(false);
 matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
           (categoryFilter === "ALL" || p.category === categoryFilter) &&
           String(p.price ?? "").includes(priceFilter.trim()) &&
+          String(p.stockQuantity ?? "").includes(stockFilter.trim()) &&
           (statusFilter === "ALL" || (statusFilter === "ACTIVE") === Boolean(p.active))
       )
       .sort((a, b) => {
@@ -1882,7 +1896,7 @@ matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
 
         return result * direction;
       });
-    }, [products, search, productNameFilter, categoryFilter, priceFilter, statusFilter, sort]);
+    }, [products, search, productNameFilter, categoryFilter, priceFilter, stockFilter, statusFilter, sort]);
 
   const handleSort = (key) =>
     setSort((current) => ({
@@ -1911,6 +1925,7 @@ matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
       category: product.category ?? "",
       description: product.description ?? "",
       price: product.price ?? "",
+      stockQuantity: product.stockQuantity ?? "",
       imageUrl: product.imageUrl ?? "",
       active: product.active ?? true,
       specifications: product.specifications || {},
@@ -1985,7 +2000,7 @@ matchesTerm(productNameFilter.trim().toLowerCase(), getProductTitle(p)) &&
 
       // "Keep same details": clear only the product-specific fields and stay open
       if (!isEdit && keepDetails) {
-        setForm((prev) => ({ ...prev, name: "", imageUrl: "", price: "" }));
+        setForm((prev) => ({ ...prev, name: "", imageUrl: "", price: "", stockQuantity: "" }));
         onNotice("Product added. Enter the next product's details.");
         await onReload();
         setTimeout(() => document.getElementById("product-gender")?.focus(), 0);
@@ -2081,6 +2096,7 @@ const handleProductCsvImport = async (e) => {
           category,
           description: pick("description", existingProduct?.description),
           price: pick("price", existingProduct?.price),
+          stockQuantity: pick("stockQuantity", existingProduct?.stockQuantity),
           imageUrl: pick("imageUrl", existingProduct?.imageUrl),
           active:
             activeCell === ""
@@ -2288,6 +2304,9 @@ const handleProductCsvImport = async (e) => {
                     {formatINR(product.price, true)}
                   </td>
 
+                  <td data-label="Legacy stock">
+                    {product.stockQuantity ?? 0}
+                  </td>
 
                   <td data-label="Status">
   <button
@@ -2402,6 +2421,19 @@ const handleProductCsvImport = async (e) => {
                 />
               </FormGroup>
 
+              <FormGroup id="product-stock" label="Legacy Stock Quantity (not used for POS availability)" required>
+                <input
+                  id="product-stock"
+                  type="number"
+                  name="stockQuantity"
+                  min="0"
+                  step="1"
+                  value={form.stockQuantity}
+                  onChange={handleChange}
+                  placeholder="Legacy product field only"
+                  required
+                />
+              </FormGroup>
 
               <FormGroup id="product-image" label="Product Image URL" full>
   <input
@@ -4156,7 +4188,7 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
   const [historyError, setHistoryError] = useState("");
 
   const selected = useMemo(
-    () => customers.find((c) => customerKey(c) === selectedKey) ?? null,
+    () => customers.find((c) => (c.id ?? customerKey(c)) === selectedKey) ?? null,
     [customers, selectedKey]
   );
 
@@ -4166,44 +4198,27 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
   }, [customers, search]);
 
   useEffect(() => {
-    if (!selected) {
+    if (!selected?.id) {
       setHistoryOrders([]);
       setHistoryPageInfo({ number: 0, totalPages: 0, totalElements: 0, last: true });
       setHistoryError("");
-      setHistoryLoading(false);
       return undefined;
     }
-
     let active = true;
-    const params = new URLSearchParams({ page: "0", size: "25" });
-    if (selected.email?.trim()) params.set("email", selected.email.trim());
-    else if (selected.phone?.trim()) params.set("phone", selected.phone.trim());
-
-    setHistoryOrders([]);
-    setHistoryPageInfo({ number: 0, totalPages: 0, totalElements: 0, last: true });
     setHistoryLoading(true);
     setHistoryError("");
-
-    api.getJson(`${ENDPOINTS.customers}/history?${params.toString()}`, "Unable to load this customer's order history")
+    api.getJson(`${ENDPOINTS.customers}/${selected.id}/history`, "Unable to load customer purchase history")
       .then((data) => {
         if (!active || !data) return;
-        setHistoryOrders(Array.isArray(data.content) ? data.content : []);
-        setHistoryPageInfo({
-          number: Number(data.number || 0),
-          totalPages: Number(data.totalPages || 0),
-          totalElements: Number(data.totalElements || 0),
-          last: Boolean(data.last),
-        });
+        const rows = Array.isArray(data.history) ? data.history : [];
+        setHistoryOrders(rows);
+        setHistoryPageInfo({ number: 0, totalPages: 1, totalElements: rows.length, last: true });
       })
-      .catch((err) => {
-        if (active) setHistoryError(err.message || "Unable to load this customer's order history");
-      })
-      .finally(() => {
-        if (active) setHistoryLoading(false);
-      });
-
+      .catch((err) => { if (active) setHistoryError(err.message || "Unable to load customer purchase history"); })
+      .finally(() => { if (active) setHistoryLoading(false); });
     return () => { active = false; };
-  }, [api, selected?.email, selected?.phone, selectedKey]);
+  }, [api, selected?.id, selectedKey]);
+
 
   const loadMoreHistory = async () => {
     if (!selected || historyLoading || historyPageInfo.last) return;
@@ -4245,8 +4260,8 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
   return (
     <section className="admin-content">
       <PageHeading
-        title="Customers"
-        description="Manage your registered shopping customers."
+        title="Customer Accounts"
+        description="One customer profile for online orders and in-store POS purchases."
         action={<RefreshButton onClick={onReload} loading={loading} />}
       />
 
@@ -4279,14 +4294,15 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                   <th scope="col">Customer</th>
                   <th scope="col">Email</th>
                   <th scope="col">Phone</th>
-                  <th scope="col">Total Orders</th>
+                  <th scope="col">Online</th>
+                  <th scope="col">In-store</th>
                   <th scope="col">Total Spent</th>
                 </tr>
               </thead>
 
               <tbody>
                 {visibleCustomers.map((customer) => {
-                  const key = customerKey(customer);
+                  const key = customer.id ?? customerKey(customer);
                   const isSelected = key === selectedKey;
 
                   return (
@@ -4306,14 +4322,15 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                       </td>
                       <td>{customer.email || "-"}</td>
                       <td>{customer.phone || "-"}</td>
-                      <td>{customer.totalOrders || 0}</td>
+                      <td>{customer.onlineOrders || 0}</td>
+                      <td>{customer.inStoreSales || 0}</td>
                       <td>{formatINR(customer.totalSpent, true)}</td>
                     </tr>
                   );
                 })}
 
                 {visibleCustomers.length === 0 && (
-                  <EmptyRow colSpan={5}>
+                  <EmptyRow colSpan={6}>
                     {customers.length === 0 ? "No customers found." : "No matching customers found."}
                   </EmptyRow>
                 )}
@@ -4335,7 +4352,7 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                 <div>
                   <h2>{selected.customerName}</h2>
                   <p>{selected.email || "No email"}</p>
-                  <p>{selected.phone || "No phone"}</p>
+                  <p>{selected.phone || "No phone"} · {selected.channel === "BOTH" ? "Online + In-store" : selected.channel === "ONLINE" ? "Online" : "In-store"}</p>
                 </div>
 
                 <button type="button" className="admin-secondary-button" onClick={() => setSelectedKey(null)}>
@@ -4344,9 +4361,9 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
                 </button>
               </div>
 
-              <h3>Order History</h3>
+              <h3>Purchase History</h3>
               <p className="admin-help-text">
-                {historyOrders.length} loaded of {historyPageInfo.totalElements} orders for this customer.
+                {historyOrders.length} purchases across online and in-store channels.
               </p>
 
               {historyLoading && historyOrders.length === 0 ? (
@@ -4354,28 +4371,28 @@ function CustomersPage({ api, customers, pageInfo, loading, onReload, onLoadMore
               ) : historyError && historyOrders.length === 0 ? (
                 <p className="admin-error" role="alert">{historyError}</p>
               ) : historyOrders.length === 0 ? (
-                <p>No orders found for this customer.</p>
+                <p>No purchases found for this customer.</p>
               ) : (
                 <div className="admin-table-wrapper">
                   <table className="admin-table">
                     <thead>
                       <tr>
-                        <th scope="col">Order ID</th>
-                        <th scope="col">Order Date</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Channel</th>
                         <th scope="col">Amount</th>
-                        <th scope="col">Payment</th>
-                        <th scope="col">Delivery Status</th>
+                        <th scope="col">Status</th>
                       </tr>
                     </thead>
 
                     <tbody>
                       {historyOrders.map((order) => (
                         <tr key={order.id}>
-                          <td>#{order.id}</td>
-                          <td>{formatDate(order.orderDate)}</td>
-                          <td>{formatINR(order.totalAmount, true)}</td>
-                          <td>{order.paymentStatus || "-"}</td>
-                          <td>{order.orderStatus || "-"}</td>
+                          <td>{order.reference}</td>
+                          <td>{formatDate(order.date)}</td>
+                          <td>{order.channel === "IN_STORE" ? "In-store POS" : "Online"}</td>
+                          <td>{formatINR(order.total, true)}</td>
+                          <td>{order.status || order.paymentStatus || "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -6257,7 +6274,7 @@ export default function AdminDashboard() {
     Products: () => loadList("products"),
     Orders: () => loadList("orders"),
     Appointments: () => loadList("appointments"),
-    Customers: () => loadList("customers"),
+    "Customer Accounts": () => loadList("customers"),
     Marketing: () => Promise.all([loadMarketing(), reloadImages()]),
   };
 
@@ -6333,7 +6350,7 @@ export default function AdminDashboard() {
             onNotice={setNotice}
           />
         );
-      case "Customers":
+      case "Customer Accounts":
         return (
           <CustomersPage
             api={api}
