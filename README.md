@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
@@ -27,3 +28,6 @@ The POS frontend uses `VITE_API_BASE_URL` for its backend API.
 The backend must allow the exact deployed frontend origin through `APP_CORS_ALLOWED_ORIGINS` (comma-separated origins, no wildcard). Set `APP_CORS_REQUIRE_HTTPS=true` in production. Configure the database, `JWT_SECRET`, Razorpay credentials and webhook secret as hosting secrets; never commit them.
 
 See the backend repository's `POS_API.md` and POS deployment runbook for API behavior, database prerequisites, migration review, and external integration limitations.
+=======
+# test3
+>>>>>>> 8b6a20cb8f65b331bbeaedead8ac932b330b520c
