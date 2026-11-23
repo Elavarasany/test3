@@ -92,7 +92,7 @@ const MENU_ITEMS = [
   { name: "Payment Settlements", icon: Landmark },
   { name: "Payment Disputes", icon: ShieldAlert },
   { name: "Appointments", icon: CalendarDays },
-  { name: "Customers", icon: Users },
+  { name: "Customer Accounts", icon: Users },
   { name: "Staff", icon: ShieldCheck },
   { name: "Audit Log", icon: History },
   { name: "Marketing", icon: Megaphone },
@@ -6335,7 +6335,7 @@ export default function AdminDashboard() {
             onNotice={setNotice}
           />
         );
-      case "Customers":
+      case "Customer Accounts":
         return (
           <CustomersPage
             api={api}
