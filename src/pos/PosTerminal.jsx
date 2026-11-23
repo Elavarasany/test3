@@ -1383,10 +1383,22 @@ function InventoryPanel({ locationId, catalog, onRefreshCatalog, onNotice, onErr
   const loadProducts = useCallback(async () => {
     setProductsLoading(true);
     try {
-      const data = await apiRequest("/admin/products?page=0&size=100");
-      // Admin product listing is paginated by Spring Data; accept both the
-      // paginated contract and a legacy array response.
-      const rows = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
+      // Admin product listing is paginated by Spring Data. Load every page so
+      // POS inventory can select any catalogue product, not just the first 100.
+      let page = 0;
+      let totalPages = 1;
+      const rows = [];
+      do {
+        const data = await apiRequest(`/admin/products?page=${page}&size=100`);
+        if (Array.isArray(data)) {
+          rows.push(...data);
+          totalPages = 1;
+        } else {
+          rows.push(...(Array.isArray(data?.content) ? data.content : []));
+          totalPages = Math.max(1, Number(data?.totalPages) || 1);
+        }
+        page += 1;
+      } while (page < totalPages);
       const list = rows.filter((product) => product.active !== false);
       setProducts(list);
       setSelectedProductId((current) => current && list.some((p) => String(p.id) === String(current))
