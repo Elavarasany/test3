@@ -6357,7 +6357,7 @@ export default function AdminDashboard() {
             customers={customers}
             pageInfo={customersPageInfo}
             loading={loading.customers}
-            onReload={reloaders.Customers}
+            onReload={reloaders["Customer Accounts"]}
             onLoadMore={() => loadList("customers", customersPageInfo.number + 1, true)}
           />
         );
