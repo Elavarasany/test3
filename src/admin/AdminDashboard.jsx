@@ -6259,7 +6259,7 @@ export default function AdminDashboard() {
     Products: () => loadList("products"),
     Orders: () => loadList("orders"),
     Appointments: () => loadList("appointments"),
-    Customers: () => loadList("customers"),
+    "Customer Accounts": () => loadList("customers"),
     Marketing: () => Promise.all([loadMarketing(), reloadImages()]),
   };
 
