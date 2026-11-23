@@ -484,7 +484,7 @@ function ProcurementHistory({ purchaseOrderId }) {
   );
 }
 
-function InventoryPanel({ locationId, catalog, onRefreshCatalog, onNotice, onError }) {
+function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNotice, onError }) {
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState("");
@@ -3632,7 +3632,7 @@ export default function PosTerminal() {
             </aside>
           </div>
         ) : activeTab === "inventory" ? (
-          <InventoryPanel locationId={locationId} catalog={catalog} onRefreshCatalog={loadCatalog} onNotice={setNotice} onError={setError} />
+          <InventoryPanel locationId={locationId} catalog={catalog} staffRole={staffRole} onRefreshCatalog={loadCatalog} onNotice={setNotice} onError={setError} />
         ) : activeTab === "shift-history" ? (
           <section className="pos-history-panel pos-report-panel">
             <div className="pos-panel-heading">
