@@ -7,9 +7,9 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./PosTerminal.css";
+import { API_BASE_URL } from "../config/api";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim() ||
-  (import.meta.env.DEV ? "http://localhost:8080/api" : "");
+const API_BASE = API_BASE_URL;
 const money = (value) => Number(value || 0).toLocaleString("en-IN", {
   style: "currency", currency: "INR", minimumFractionDigits: 2, maximumFractionDigits: 2
 });
