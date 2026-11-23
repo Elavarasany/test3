@@ -83,18 +83,33 @@ const MARKETING_MODAL = {
   headerClass: "modal-header",
 };
 
-const MENU_ITEMS = [
-  { name: "Dashboard", icon: LayoutDashboard },
-  { name: "POS Terminal", icon: Store },
-  { name: "Products", icon: Package },
-  { name: "Orders", icon: ShoppingCart },
-  { name: "Payment Settlements", icon: Landmark },
-  { name: "Payment Disputes", icon: ShieldAlert },
-  { name: "Appointments", icon: CalendarDays },
-  { name: "Customers", icon: Users },
-  { name: "Staff", icon: ShieldCheck },
-  { name: "Audit Log", icon: History },
-  { name: "Marketing", icon: Megaphone },
+// Operational navigation is split by sales channel. Products is the shared
+// catalogue used by both the online storefront and the in-store POS.
+const MENU_SECTIONS = [
+  {
+    label: "ONLINE STORE",
+    items: [
+      { name: "Dashboard", icon: LayoutDashboard },
+      { name: "Products", label: "Products & Catalogue", icon: Package },
+      { name: "Orders", icon: ShoppingCart },
+      { name: "Appointments", icon: CalendarDays },
+      { name: "Customers", icon: Users },
+      { name: "Marketing", icon: Megaphone },
+      { name: "Payment Settlements", icon: Landmark, adminOnly: true },
+      { name: "Payment Disputes", icon: ShieldAlert, adminOnly: true },
+    ],
+  },
+  {
+    label: "OFFLINE STORE",
+    items: [
+      { name: "POS Terminal", icon: Store },
+    ],
+  },
+];
+
+const ADMIN_MENU_ITEMS = [
+  { name: "Staff", icon: ShieldCheck, adminOnly: true },
+  { name: "Audit Log", icon: History, adminOnly: true },
   { name: "Settings", icon: Settings },
 ];
 
@@ -6418,34 +6433,61 @@ export default function AdminDashboard() {
               <p>ADMIN PANEL</p>
             </div>
 
-            <div className="admin-menu-label">MAIN MENU</div>
-
             <nav className="admin-navigation" aria-label="Admin">
-              {MENU_ITEMS.filter((item) => !["Staff", "Audit Log", "Payment Settlements", "Payment Disputes"].includes(item.name) || isAdmin).map((item) => {
-                const Icon = item.icon;
-                const isActive = activePage === item.name;
+              {MENU_SECTIONS.map((section) => (
+                <section className="admin-nav-section" key={section.label} aria-label={section.label}>
+                  <h3 className="admin-menu-label">{section.label}</h3>
+                  <div className="admin-nav-section-items">
+                    {section.items.filter((item) => !item.adminOnly || isAdmin).map((item) => {
+                      const Icon = item.icon;
+                      const isActive = activePage === item.name;
 
-                return (
-                  <button
-                    key={item.name}
-                    type="button"
-                    className={`admin-nav-item ${isActive ? "active" : ""}`}
-                    aria-current={isActive ? "page" : undefined}
-                    onClick={() => {
-                      if (item.name === "POS Terminal") {
-                        setActivePage(item.name);
-                        setSidebarOpen(false);
-                        navigate("/admin/pos");
-                        return;
-                      }
-                      navigateTo(item.name);
-                    }}
-                  >
-                    <Icon size={19} aria-hidden="true" />
-                    <span>{item.name}</span>
-                  </button>
-                );
-              })}
+                      return (
+                        <button
+                          key={item.name}
+                          type="button"
+                          className={`admin-nav-item ${isActive ? "active" : ""}`}
+                          aria-current={isActive ? "page" : undefined}
+                          onClick={() => {
+                            if (item.name === "POS Terminal") {
+                              setActivePage(item.name);
+                              setSidebarOpen(false);
+                              navigate("/admin/pos");
+                              return;
+                            }
+                            navigateTo(item.name);
+                          }}
+                        >
+                          <Icon size={19} aria-hidden="true" />
+                          <span>{item.label || item.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+
+              <section className="admin-nav-section admin-nav-admin-section" aria-label="Administration">
+                <h3 className="admin-menu-label">ADMINISTRATION</h3>
+                <div className="admin-nav-section-items">
+                  {ADMIN_MENU_ITEMS.filter((item) => !item.adminOnly || isAdmin).map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activePage === item.name;
+                    return (
+                      <button
+                        key={item.name}
+                        type="button"
+                        className={`admin-nav-item ${isActive ? "active" : ""}`}
+                        aria-current={isActive ? "page" : undefined}
+                        onClick={() => navigateTo(item.name)}
+                      >
+                        <Icon size={19} aria-hidden="true" />
+                        <span>{item.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
             </nav>
 
             <button type="button" className="admin-logout-button" onClick={logout}>
