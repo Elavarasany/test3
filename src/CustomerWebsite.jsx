@@ -22,6 +22,7 @@ import {
   Navigation,
 } from "lucide-react";
 import "./App.css";
+import { API_BASE_URL } from "./config/api";
 
 // Face analysis is heavy and only used on demand, so load it lazily.
 const FaceAnalysis = lazy(() => import("./FaceAnalysis"));
@@ -30,7 +31,7 @@ const FaceAnalysis = lazy(() => import("./FaceAnalysis"));
    CONSTANTS
 ========================= */
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim() || (import.meta.env.DEV ? "http://localhost:8080/api" : "");
+const API_BASE = API_BASE_URL;
 const API_URL = `${API_BASE}/products`;
 const CART_KEY = "nmk-cart";
 const WISHLIST_KEY = "nmk-wishlist";
