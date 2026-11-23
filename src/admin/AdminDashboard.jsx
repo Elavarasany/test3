@@ -550,9 +550,6 @@ const LINK_ERROR = "Destination must be a full URL (https://…) or a page path 
 
 const isWholeNumber = (value) => value !== "" && Number.isInteger(Number(value)) && Number(value) >= 0;
 
-const isLowStock = (product, threshold = DEFAULT_PREFS.lowStockThreshold) =>
-  Number(product.stockQuantity) <= threshold;
-
 const customerKey = (customer) => customer.email || customer.phone || customer.customerName || "";
 
 const getImageFileError = (file) => {
@@ -1548,7 +1545,7 @@ const handleFieldChange = (setForm) => (e) => {
 ========================= */
 
 function DashboardPage({ api, products, orders, appointments, refreshing, onRefresh, onViewProducts, onNotice }) {
-  const { lowStockThreshold, dashboardRows } = usePrefs();
+  const { dashboardRows } = usePrefs();
   const [range, setRange] = useState(EMPTY_RANGE);
   const bulk = useBulkClear({ api, onNotice, onReload: onRefresh });
 
@@ -1565,12 +1562,11 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
       upcomingAppointments: bookable.filter((a) => a.appointmentDate > today).length,
       pastAppointments: bookable.filter((a) => a.appointmentDate < today).length,
       totalProducts: products.length,
-      lowStock: products.filter((p) => isLowStock(p, lowStockThreshold)).length,
       totalOrders: filteredOrders.length,
       paidOrders: paid.length,
       revenue: paid.reduce((sum, o) => sum + Number(o.totalAmount || 0), 0),
     };
-  }, [products, orders, appointments, range, lowStockThreshold]);
+  }, [products, orders, appointments, range]);
 
   const cards = [
     { label: "Total Appointments", value: stats.totalAppointments, hint: "Customer eye checkup bookings", icon: CalendarDays, tone: "gold" },
@@ -1580,7 +1576,6 @@ function DashboardPage({ api, products, orders, appointments, refreshing, onRefr
     { label: "Total Products", value: stats.totalProducts, hint: "Products in catalogue", icon: Package, tone: "blue" },
     { label: "Total Orders", value: stats.totalOrders, hint: `${stats.paidOrders} paid orders`, icon: ShoppingCart, tone: "gold" },
     { label: "Total Revenue", value: formatINR(stats.revenue), hint: "Successfully paid orders", icon: TrendingUp, tone: "green" },
-    { label: "Low Stock", value: stats.lowStock, hint: `${lowStockThreshold} or fewer units`, icon: AlertTriangle, tone: "red" },
   ];
 
   // Dashboard figures come from orders and appointments, so both are cleared
