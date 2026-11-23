@@ -8,8 +8,8 @@ import {
     EyeOff
 } from "lucide-react";
 import "./Admin.css";
+import { API_BASE_URL } from "../config/api";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim() || (import.meta.env.DEV ? "http://localhost:8080/api" : "");
 const API_URL = `${API_BASE_URL}/admin/auth/login`;
 
 export default function AdminLogin() {
