@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import CustomerWebsite from "./CustomerWebsite";
+import { API_CONFIGURATION_ERROR } from "./config/api";
 
 // Admin pages load on demand.
 const AdminLogin = lazy(() => import("./admin/AdminLogin"));
@@ -64,6 +65,15 @@ function PageLoader() {
 }
 
 export default function App() {
+  if (API_CONFIGURATION_ERROR) {
+    return (
+      <main role="alert" style={{ minHeight: "100vh", display: "grid", placeContent: "center", gap: 12, padding: 24, fontFamily: "system-ui, sans-serif", color: "#17283d", background: "#fff" }}>
+        <h1 style={{ margin: 0, fontSize: 24 }}>NMK Opticals configuration required</h1>
+        <p>{API_CONFIGURATION_ERROR}</p>
+      </main>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
