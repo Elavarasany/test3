@@ -1383,8 +1383,11 @@ function InventoryPanel({ locationId, catalog, onRefreshCatalog, onNotice, onErr
   const loadProducts = useCallback(async () => {
     setProductsLoading(true);
     try {
-      const data = await apiRequest("/admin/products");
-      const list = Array.isArray(data) ? data.filter((product) => product.active !== false) : [];
+      const data = await apiRequest("/admin/products?page=0&size=100");
+      // Admin product listing is paginated by Spring Data; accept both the
+      // paginated contract and a legacy array response.
+      const rows = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
+      const list = rows.filter((product) => product.active !== false);
       setProducts(list);
       setSelectedProductId((current) => current && list.some((p) => String(p.id) === String(current))
         ? current : (list[0]?.id ? String(list[0].id) : ""));
