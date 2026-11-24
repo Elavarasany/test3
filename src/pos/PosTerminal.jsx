@@ -3437,7 +3437,10 @@ export default function PosTerminal() {
       <div className="pos-page">
         <div className="pos-heading-row">
           <div><span className="pos-eyebrow">STORE OPERATIONS</span><h1>Sales terminal</h1><p>Scan or search products, build the bill, collect payment and print the invoice.</p></div>
-          <div className="pos-heading-actions">
+        </div>
+
+        <nav className="pos-sticky-nav" aria-label="POS sections">
+          <div className="pos-sticky-nav-inner">
             <button type="button" className={`pos-tab-button ${activeTab === "checkout" ? "active" : ""}`} onClick={() => setActiveTab("checkout")}><ShoppingCart size={17} /> New sale</button>
             {canManageInventory && <button type="button" className={`pos-tab-button ${activeTab === "inventory" ? "active" : ""}`} onClick={() => setActiveTab("inventory")}><Package size={17} /> Inventory</button>}
             {canViewHistory && <button type="button" className={`pos-tab-button ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}><History size={17} /> Sales history</button>}
@@ -3447,7 +3450,7 @@ export default function PosTerminal() {
             {canViewHistory && <button type="button" className={`pos-tab-button ${activeTab === "payment-review" ? "active" : ""}`} onClick={() => setActiveTab("payment-review")}><AlertCircle size={17} /> Payment exceptions</button>}
             {canViewHistory && <button type="button" className={`pos-tab-button ${activeTab === "stale-payment-review" ? "active" : ""}`} onClick={() => setActiveTab("stale-payment-review")}><Clock3 size={17} /> Payment review</button>}
           </div>
-        </div>
+        </nav>
 
         {error && <div className="pos-alert error" role="alert"><AlertCircle size={18} /><span>{error}</span><button type="button" onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         {notice && <div className="pos-alert success" role="status"><CheckCircle2 size={18} /><span>{notice}</span><button type="button" onClick={() => setNotice("")} aria-label="Dismiss notice"><X size={16} /></button></div>}
