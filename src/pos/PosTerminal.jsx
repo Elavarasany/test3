@@ -3448,42 +3448,13 @@ export default function PosTerminal() {
           </div>
         </nav>
 
-        <div className="pos-heading-row">
-          <div><span className="pos-eyebrow">STORE OPERATIONS</span><h1>Sales terminal</h1><p>Scan or search products, build the bill, collect payment and print the invoice.</p></div>
-        </div>
-
         {error && <div className="pos-alert error" role="alert"><AlertCircle size={18} /><span>{error}</span><button type="button" onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         {notice && <div className="pos-alert success" role="status"><CheckCircle2 size={18} /><span>{notice}</span><button type="button" onClick={() => setNotice("")} aria-label="Dismiss notice"><X size={16} /></button></div>}
 
         {locationStockCountLocked && <div className="pos-alert error" role="alert"><AlertCircle size={18} /><span>Physical stock count in progress. Sales and stock movements are temporarily frozen at this location.</span></div>}
 
         {activeTab === "checkout" && (
-          <div className="pos-workflow-steps" aria-label="Checkout workflow">
-          <article className={`pos-workflow-step ${shift?.status === "OPEN" ? "complete" : "gate"}`}>
-            <span className="pos-step-number">{shift?.status === "OPEN" ? "✓" : "1"}</span>
-            <div className="pos-step-copy">
-              <div className="pos-step-title">STEP 1: Cash Register <span className={`pos-step-state ${shift?.status === "OPEN" ? "success" : "warning"}`}>{shift?.status === "OPEN" ? "SHIFT OPEN" : "ACTIVE GATE"}</span></div>
-              <p>{shift?.status === "OPEN" ? "Cashier shift verified and ready" : "Open a cashier shift before completing a sale"}</p>
-            </div>
-          </article>
-          <article className={`pos-workflow-step ${shift?.status !== "OPEN" ? "locked" : cart.length ? "complete" : "active"}`}>
-            <span className="pos-step-number">2</span>
-            <div className="pos-step-copy">
-              <div className="pos-step-title">STEP 2: Product Catalogue</div>
-              <p>Select optical frames, lenses and variants</p>
-            </div>
-          </article>
-          <article className={`pos-workflow-step ${shift?.status !== "OPEN" || !cart.length ? "locked" : "active"}`}>
-            <span className="pos-step-number">3</span>
-            <div className="pos-step-copy">
-              <div className="pos-step-title">STEP 3: Current Bill &amp; Invoice</div>
-              <p>Collect payment, complete sale and print receipt</p>
-            </div>
-          </article>
-          </div>
-        )}
-
-        <section className="pos-shift-panel">
+          <section className="pos-shift-panel">
           <div className="pos-shift-heading">
             <div>
               <span className="pos-eyebrow">CASH REGISTER</span>
@@ -3562,7 +3533,34 @@ export default function PosTerminal() {
           {shift?.status === "CLOSED" && (
             <p className="pos-shift-closed-note">This shift is closed. Open a new shift to continue selling. Final variance: {money(shift.cashVariance)}{shift.closingReason ? ` · ${shift.closingReason}` : ""}</p>
           )}
-        </section>
+          </section>
+        )}
+
+        {activeTab === "checkout" && (
+          <div className="pos-workflow-steps" aria-label="Checkout workflow">
+          <article className={`pos-workflow-step ${shift?.status === "OPEN" ? "complete" : "gate"}`}>
+            <span className="pos-step-number">{shift?.status === "OPEN" ? "✓" : "1"}</span>
+            <div className="pos-step-copy">
+              <div className="pos-step-title">STEP 1: Cash Register <span className={`pos-step-state ${shift?.status === "OPEN" ? "success" : "warning"}`}>{shift?.status === "OPEN" ? "SHIFT OPEN" : "ACTIVE GATE"}</span></div>
+              <p>{shift?.status === "OPEN" ? "Cashier shift verified and ready" : "Open a cashier shift before completing a sale"}</p>
+            </div>
+          </article>
+          <article className={`pos-workflow-step ${shift?.status !== "OPEN" ? "locked" : cart.length ? "complete" : "active"}`}>
+            <span className="pos-step-number">2</span>
+            <div className="pos-step-copy">
+              <div className="pos-step-title">STEP 2: Product Catalogue</div>
+              <p>Select optical frames, lenses and variants</p>
+            </div>
+          </article>
+          <article className={`pos-workflow-step ${shift?.status !== "OPEN" || !cart.length ? "locked" : "active"}`}>
+            <span className="pos-step-number">3</span>
+            <div className="pos-step-copy">
+              <div className="pos-step-title">STEP 3: Current Bill &amp; Invoice</div>
+              <p>Collect payment, complete sale and print receipt</p>
+            </div>
+          </article>
+          </div>
+        )}
 
         {activeTab === "checkout" ? (
           <div className="pos-workspace">
