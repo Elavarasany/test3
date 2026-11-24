@@ -741,3 +741,52 @@
   .pos-app:has(.pos-shift-panel) .pos-discount-controls { flex-wrap: wrap; }
   .pos-app:has(.pos-shift-panel) .pos-discount-controls input { width: 100%; flex-basis: 100%; }
 }
+
+
+/* Full-screen current bill view */
+.pos-app:has(.pos-cart-panel.is-expanded)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(3px);
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded {
+  position: fixed !important;
+  z-index: 1000 !important;
+  inset: 16px !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  padding: clamp(18px, 3vw, 36px) !important;
+  border: 1px solid #dbe3ee !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.28) !important;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-panel-heading {
+  position: sticky;
+  top: calc(clamp(18px, 3vw, 36px) * -1);
+  z-index: 2;
+  padding: 12px 0 16px;
+  background: #fff;
+  border-bottom: 1px solid #e8edf4;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-panel-heading h2 {
+  font-size: clamp(20px, 2vw, 28px);
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-customer-fields,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-row {
+  font-size: 14px;
+}
+.pos-bill-heading-actions { display: flex; align-items: center; gap: 8px; }
+.pos-bill-zoom { flex: 0 0 auto; width: 36px; height: 36px; border: 1px solid #dbe3ee; border-radius: 9px; color: #334155; background: #fff; }
+.pos-bill-zoom:hover { color: #1d4ed8; border-color: #93c5fd; background: #eff6ff; }
+@media (max-width: 640px) {
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded { inset: 6px !important; padding: 14px !important; border-radius: 12px !important; }
+}
