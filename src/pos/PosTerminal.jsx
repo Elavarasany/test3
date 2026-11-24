@@ -3483,7 +3483,7 @@ export default function PosTerminal() {
             ) : (!shift?.id || shift.status === "CLOSED") ? (
               <>
                 <label>Opening cash float (₹)
-                  <input type="number" min="0" step="0.01" value={openingFloat} onChange={(event) => setOpeningFloat(event.target.value)} disabled={shiftSaving || !registerId} />
+                  <input type="number" min="0" step="0.01" value={openingFloat} onFocus={(event) => { if (Number(event.target.value) === 0) setOpeningFloat(""); }} onBlur={() => { if (openingFloat === "") setOpeningFloat("0.00"); }} onChange={(event) => setOpeningFloat(event.target.value)} disabled={shiftSaving || !registerId} />
                 </label>
                 <button type="button" className="pos-button primary" onClick={openShift} disabled={shiftSaving || shiftLoading || !registerId}>
                   {shiftSaving ? "Opening…" : "Open shift"}
@@ -3615,7 +3615,7 @@ export default function PosTerminal() {
                       <button type="button" disabled={retryPending || !canApplyDiscount || !subtotal} onClick={() => setDiscount(amount(Math.min(subtotal, subtotal * 0.10)))}>10%</button>
                       <button type="button" disabled={retryPending || !canApplyDiscount || !subtotal} onClick={() => setDiscount(amount(Math.min(subtotal, 100)))}>₹100</button>
                     </div>
-                    <input id="pos-discount" type="number" min="0" max={subtotal} step="0.01" value={discount} disabled={retryPending || !canApplyDiscount} onChange={(e) => setDiscount(e.target.value)} />
+                    <input id="pos-discount" type="number" min="0" max={subtotal} step="0.01" value={discount} disabled={retryPending || !canApplyDiscount} onFocus={(e) => { if (Number(e.target.value) === 0) setDiscount(""); }} onBlur={() => { if (discount === "") setDiscount("0.00"); }} onChange={(e) => setDiscount(e.target.value)} />
                   </div>
                 </div>
                 {!canApplyDiscount && <p className="pos-retry-note">Sale discounts require ADMIN or MANAGER approval.</p>}
@@ -3643,8 +3643,8 @@ export default function PosTerminal() {
                     <button type="button" disabled={retryPending} onClick={() => updatePayment(index, "tenderedAmount", payment.amount)}>Exact</button>
                   </div>}
                   <div className="pos-payment-inputs">
-                    <label>Amount<input type="number" min="0" step="0.01" value={payment.amount} disabled={retryPending} onChange={(e) => updatePayment(index, "amount", e.target.value)} /></label>
-                    {payment.paymentMethod === "CASH" ? <label>Cash received<input type="number" min="0" step="0.01" value={payment.tenderedAmount} disabled={retryPending} onChange={(e) => updatePayment(index, "tenderedAmount", e.target.value)} /></label>
+                    <label>Amount<input type="number" min="0" step="0.01" value={payment.amount} disabled={retryPending} onFocus={(e) => { if (Number(e.target.value) === 0) updatePayment(index, "amount", ""); }} onBlur={() => { if (payment.amount === "") updatePayment(index, "amount", "0.00"); }} onChange={(e) => updatePayment(index, "amount", e.target.value)} /></label>
+                    {payment.paymentMethod === "CASH" ? <label>Cash received<input type="number" min="0" step="0.01" value={payment.tenderedAmount} disabled={retryPending} onFocus={(e) => { if (Number(e.target.value) === 0) updatePayment(index, "tenderedAmount", ""); }} onBlur={() => { if (payment.tenderedAmount === "") updatePayment(index, "tenderedAmount", "0.00"); }} onChange={(e) => updatePayment(index, "tenderedAmount", e.target.value)} /></label>
                       : <label>UPI / card transaction reference<input value={payment.transactionReference} disabled={retryPending} required onChange={(e) => updatePayment(index, "transactionReference", e.target.value)} placeholder="Enter UTR or card terminal reference" maxLength={150} /></label>}
                   </div>
                 </div>)}
