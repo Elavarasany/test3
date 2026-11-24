@@ -3,7 +3,7 @@ import {
   ArrowLeft, Search, RefreshCw, Plus, Minus, Trash2, Receipt,
   History, ShoppingCart, Store, Printer, X, CheckCircle2, Clock3, FileText,
   AlertCircle, UserRound, CreditCard,
-  ChevronLeft, ChevronRight, Package, ScanLine, ClipboardCheck, Truck, BarChart3
+  ChevronLeft, ChevronRight, Package, ScanLine, ClipboardCheck, Truck, BarChart3, Maximize2, Minimize2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./PosTerminal.css";
@@ -2132,6 +2132,13 @@ export default function PosTerminal() {
   const [category, setCategory] = useState("All");
   const [selectedVariants, setSelectedVariants] = useState({});
   const [cart, setCart] = useState([]);
+  const [billExpanded, setBillExpanded] = useState(false);
+  useEffect(() => {
+    if (!billExpanded) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setBillExpanded(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [billExpanded]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [discount, setDiscount] = useState("0.00");
@@ -3589,9 +3596,13 @@ export default function PosTerminal() {
                 </div>}
             </section>
 
-            <aside className="pos-cart-panel">
+            <aside className={`pos-cart-panel${billExpanded ? " is-expanded" : ""}`} aria-label="Current bill">
               <div className="pos-panel-heading">
                 <div><h2>Current bill <span className="pos-count">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span></h2><p>Items in this transaction</p></div>
+                <div className="pos-bill-heading-actions">
+                  <button type="button" className="pos-icon-button pos-bill-zoom" onClick={() => setBillExpanded((value) => !value)} aria-label={billExpanded ? "Exit full screen bill" : "Expand bill to full screen"} title={billExpanded ? "Exit full screen" : "View bill full screen"}>
+                    {billExpanded ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+                  </button>
                 {cart.length > 0 && <button type="button" className="pos-text-button" onClick={() => { setCart([]); pendingKey.current = null; setPendingPayload(null); setRetryPending(false); }} disabled={retryPending}>Clear all</button>}
               </div>
               <div className="pos-bill-status">
