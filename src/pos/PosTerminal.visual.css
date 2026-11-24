@@ -624,3 +624,120 @@
   .pos-app:has(.pos-shift-panel) .pos-customer-fields { grid-template-columns: 1fr; }
   .pos-app:has(.pos-shift-panel) .pos-payment-inputs { grid-template-columns: 1fr; }
 }
+
+
+/* Shared POS chrome stays consistent while switching between the top-level work areas. */
+.pos-app .pos-topbar {
+  min-height: 53px;
+  padding: 7px 16px;
+  background: #fff;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04);
+}
+.pos-app .pos-brand { gap: 12px; }
+.pos-app .pos-brand > div { gap: 0; }
+.pos-app .pos-brand strong { color: #0f172a; font-size: 16px; font-weight: 800; letter-spacing: -.04em; }
+.pos-app .pos-brand strong span { color: #2563eb; }
+.pos-app .pos-brand small { color: #94a3b8; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
+.pos-app .pos-back-button {
+  width: 36px; height: 36px; border: 1px solid #e2e8f0; border-radius: 8px;
+  background: #fff; color: #64748b;
+}
+.pos-app .pos-topbar-right { gap: 12px; }
+.pos-app .pos-location-picker { gap: 8px; color: #64748b; font-size: 11px; font-weight: 650; }
+.pos-app .pos-location-picker select {
+  max-width: min(34vw,330px); min-height: 34px; padding: 6px 28px 6px 10px;
+  border: 1px solid #e2e8f0; border-radius: 7px; background: #f8fafc; color: #0f172a; font-size: 11px;
+}
+.pos-app .pos-cashier { gap: 7px; color: #475569; font-size: 11px; }
+.pos-app .pos-sticky-nav {
+  position: sticky; top: 53px; z-index: 50;
+  width: 100vw; margin: 0 0 16px calc(50% - 50vw); padding: 7px 16px;
+  background: rgba(255,255,255,.97); border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15,23,42,.025); backdrop-filter: blur(12px);
+}
+.pos-app .pos-sticky-nav-inner {
+  display: flex; justify-content: flex-start; align-items: center; gap: 5px;
+  width: min(1720px,100%); margin: 0 auto; overflow-x: auto; scrollbar-width: none;
+}
+.pos-app .pos-sticky-nav-inner::-webkit-scrollbar { display: none; }
+.pos-app .pos-sticky-nav-inner .pos-tab-button {
+  width: auto; min-width: max-content; min-height: 33px; padding: 0 13px;
+  border: 0; border-radius: 999px; background: transparent; color: #64748b;
+  font-size: 11px; font-weight: 650; white-space: nowrap;
+}
+.pos-app .pos-sticky-nav-inner .pos-tab-button:hover { background: #f1f5f9; color: #0f172a; }
+.pos-app .pos-sticky-nav-inner .pos-tab-button.active {
+  background: #1e40af; color: #fff; box-shadow: 0 1px 3px rgba(30,64,175,.2);
+}
+.pos-app .pos-location-picker option { color: #1e293b; background: #fff; }
+
+.pos-app:has(.pos-shift-panel) .pos-payment-row-heading { gap: 8px; }
+.pos-app:has(.pos-shift-panel) .pos-payment-method-tabs {
+  display: grid; grid-template-columns: repeat(3,minmax(56px,1fr)); gap: 3px;
+  padding: 3px; border-radius: 7px; background: #eef2f7;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-method-tabs button {
+  min-height: 27px; padding: 0 10px; border: 0; border-radius: 5px;
+  background: transparent; color: #64748b; font-size: 9px; font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-method-tabs button.active {
+  background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(15,23,42,.1);
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-method-tabs button:disabled { opacity: .65; }
+.pos-app:has(.pos-shift-panel) .pos-discount-row { align-items: flex-start; }
+.pos-app:has(.pos-shift-panel) .pos-discount-controls {
+  display: flex; align-items: center; justify-content: flex-end; gap: 7px; min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-quick-values {
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.pos-app:has(.pos-shift-panel) .pos-quick-values button,
+.pos-app:has(.pos-shift-panel) .pos-tender-presets button {
+  min-height: 22px; padding: 0 7px; border: 0; border-radius: 4px;
+  background: #f1f5f9; color: #475569; font-size: 9px; font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-quick-values button:hover:not(:disabled),
+.pos-app:has(.pos-shift-panel) .pos-tender-presets button:hover:not(:disabled) {
+  background: #dbeafe; color: #1d4ed8;
+}
+.pos-app:has(.pos-shift-panel) .pos-quick-values button:disabled,
+.pos-app:has(.pos-shift-panel) .pos-tender-presets button:disabled { opacity: .45; }
+.pos-app:has(.pos-shift-panel) .pos-discount-controls input { width: 88px; flex: 0 0 88px; }
+.pos-app:has(.pos-shift-panel) .pos-tender-presets {
+  display: flex; align-items: center; gap: 5px; margin: 0 0 7px;
+}
+.pos-app:has(.pos-shift-panel) .pos-tender-presets span {
+  margin-right: auto; color: #334155; font-size: 9px; font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-bill-status {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin: 2px 0 5px; padding: 9px 10px;
+  border: 1px solid #bfdbfe; border-radius: 7px; background: #eff6ff;
+}
+.pos-app:has(.pos-shift-panel) .pos-bill-status > span {
+  display: inline-flex; align-items: center; gap: 7px; color: #1e3a8a; font-size: 9px; font-weight: 650;
+}
+.pos-app:has(.pos-shift-panel) .pos-bill-status svg { color: #2563eb; }
+.pos-app:has(.pos-shift-panel) .pos-bill-status strong {
+  padding: 2px 6px; border-radius: 4px; background: #1e3a8a; color: #fff; font-size: 8px;
+}
+.pos-app:has(.pos-shift-panel) .pos-bill-status small { color: #1d4ed8; font-size: 8px; }
+.pos-app:has(.pos-shift-panel) .pos-shift-gate-note {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin: 8px 0 0; padding: 7px 8px; border-radius: 6px;
+  background: #fff1f2; color: #e11d48; font-size: 9px; font-weight: 700; text-align: center;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-gate-note svg { flex: 0 0 auto; }
+@media (max-width: 600px) {
+  .pos-app .pos-topbar { min-height: 53px; padding: 6px 11px; }
+  .pos-app .pos-topbar-right { gap: 0; }
+  .pos-app .pos-location-picker > span { display: none; }
+  .pos-app .pos-location-picker select { max-width: 42vw; min-height: 32px; font-size: 9px; }
+  .pos-app .pos-cashier { display: none; }
+  .pos-app .pos-sticky-nav { padding: 6px 9px; }
+  .pos-app .pos-sticky-nav-inner .pos-tab-button { min-height: 31px; padding: 0 10px; font-size: 10px; }
+  .pos-app:has(.pos-shift-panel) .pos-discount-controls { flex-wrap: wrap; }
+  .pos-app:has(.pos-shift-panel) .pos-discount-controls input { width: 100%; flex-basis: 100%; }
+}
