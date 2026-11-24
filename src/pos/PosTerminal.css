@@ -84,16 +84,20 @@
   backdrop-filter: blur(12px);
 }
 .pos-sticky-nav-inner {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  align-items: stretch;
   gap: 8px;
   width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd3de transparent;
 }
-.pos-sticky-nav-inner .pos-tab-button { flex: 0 0 auto; white-space: nowrap; }
+.pos-sticky-nav-inner .pos-tab-button {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.25;
+}
 .pos-tab-button {
   display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 15px;
   border: 1px solid #dce2ea; border-radius: 9px; background: #fff; color: #566477;
@@ -321,7 +325,8 @@
   .pos-location-picker { width: 100%; }
   .pos-location-picker select { flex: 1; max-width: none; }
   .pos-sticky-nav { margin-left: -11px; margin-right: -11px; padding: 8px 11px; }
-  .pos-tab-button { min-height: 38px; padding: 0 11px; font-size: 10px; }
+  .pos-sticky-nav-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .pos-tab-button { min-height: 42px; padding: 6px 8px; font-size: 11px; }
   .pos-receipt-modal, .pos-history-modal { padding: 13px; }
   .pos-receipt-print { padding: 13px; }
 }
