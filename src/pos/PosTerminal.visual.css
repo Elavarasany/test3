@@ -1237,3 +1237,82 @@
     column-gap: 8px;
   }
 }
+
+
+/* Expanded bill has more specific layout rules; mirror the same safe spacing there. */
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-form-section-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 9px;
+  row-gap: 5px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-form-section-title > span {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-discount-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+  min-width: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-discount-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-quick-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-width: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-discount-controls input {
+  flex: 1 1 105px;
+  width: 105px;
+  min-width: 85px;
+  max-width: 150px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-totals > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-totals > div > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-totals > div > strong {
+  min-width: max-content;
+  text-align: right;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-row-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-method-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1 1 220px;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  gap: 7px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-method-tabs button {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 5px;
+}
