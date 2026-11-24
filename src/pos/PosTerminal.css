@@ -17,9 +17,9 @@
   min-height: 100vh;
   background: #f5f7fa;
   color: var(--pos-ink);
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.45;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
   text-align: left;
 }
 
