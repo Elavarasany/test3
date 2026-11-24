@@ -1,539 +1,626 @@
-/* New Sale visual-only refinement based on Figma frame 2:389.
-   This file changes presentation only; no POS flow, state, permissions or API behavior. */
-.pos-page:has(.pos-workflow-steps) {
-  font-family: "Plus Jakarta Sans", Inter, "Segoe UI", Arial, sans-serif !important;
+
+/* Exact New Sale visual translation of the supplied code.html reference.
+   Only the checkout surface is scoped; other POS tabs retain their current styling. */
+.pos-app:has(.pos-shift-panel) {
+  --pos-navy: #1e40af;
+  --pos-navy-dark: #1e3a8a;
+  --pos-blue: #2563eb;
+  --pos-ink: #1e293b;
+  --pos-muted: #64748b;
+  --pos-line: #e2e8f0;
+  min-height: 100vh;
+  background: #f7f9fb;
+  color: #1e293b;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 13px;
   line-height: 1.5;
-  color: #202b3a;
 }
-.pos-page:has(.pos-workflow-steps) :is(h1,h2,h3,h4,p,label,button,input,select,small,strong,span) {
-  font-family: inherit;
+.pos-app:has(.pos-shift-panel) :is(button,input,select) { font-family: inherit; }
+.pos-app:has(.pos-shift-panel) .pos-topbar {
+  min-height: 53px;
+  padding: 7px 16px;
+  background: #fff;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04);
 }
-.pos-page:has(.pos-workflow-steps) .pos-shift-panel {
-  padding: 14px 16px !important;
-  border: 1px solid #e3e7ec;
+.pos-app:has(.pos-shift-panel) .pos-brand { gap: 12px; }
+.pos-app:has(.pos-shift-panel) .pos-brand > div { gap: 0; }
+.pos-app:has(.pos-shift-panel) .pos-brand strong {
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+.pos-app:has(.pos-shift-panel) .pos-brand strong span { color: #2563eb; }
+.pos-app:has(.pos-shift-panel) .pos-brand small {
+  position: relative;
+  padding-left: 10px;
+  color: #94a3b8;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.pos-app:has(.pos-shift-panel) .pos-brand small:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2563eb;
+}
+.pos-app:has(.pos-shift-panel) .pos-back-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   background: #fff;
+  color: #64748b;
 }
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading h2 {
-  font-size: 15px !important;
-  line-height: 1.35;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading p {
-  font-size: 11px !important;
-  line-height: 1.5;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading .pos-eyebrow {
-  font-size: 10px !important;
-  letter-spacing: .08em;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-controls label,
-.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls label {
-  gap: 5px;
-  font-size: 11px !important;
+.pos-app:has(.pos-shift-panel) .pos-back-button:hover { background: #f8fafc; }
+.pos-app:has(.pos-shift-panel) .pos-topbar-right { gap: 12px; }
+.pos-app:has(.pos-shift-panel) .pos-location-picker {
+  gap: 8px;
+  color: #64748b;
+  font-size: 11px;
   font-weight: 650;
-  line-height: 1.4;
 }
-.pos-page:has(.pos-workflow-steps) .pos-shift-controls :is(input,select),
-.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls :is(input,select) {
-  min-height: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border: 1px solid #dfe4eb;
-  border-radius: 5px;
-  background: #f7f8fa;
-  font-size: 12px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-controls .pos-button,
-.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls .pos-button {
-  min-height: 36px;
-  padding: 0 13px;
-  border-radius: 5px;
-  font-size: 11px !important;
-  font-weight: 700;
-}
-.pos-page:has(.pos-workflow-steps) .pos-workflow-steps {
-  gap: 11px;
-  margin-bottom: 13px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step {
-  min-height: 60px;
-  gap: 10px;
-  padding: 10px 12px;
+.pos-app:has(.pos-shift-panel) .pos-location-picker select {
+  max-width: min(34vw, 330px);
+  min-height: 34px;
+  padding: 6px 28px 6px 10px;
+  border: 1px solid #e2e8f0;
   border-radius: 7px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step .pos-step-number {
-  width: 27px;
-  height: 27px;
-  flex-basis: 27px;
+  background: #f8fafc;
+  color: #0f172a;
   font-size: 11px;
 }
-.pos-page:has(.pos-workflow-steps) .pos-step-title {
+.pos-app:has(.pos-shift-panel) .pos-cashier {
   gap: 7px;
-  font-size: 11px !important;
-  line-height: 1.4;
-  font-weight: 750;
+  color: #475569;
+  font-size: 11px;
 }
-.pos-page:has(.pos-workflow-steps) .pos-step-copy p {
-  font-size: 10px !important;
-  line-height: 1.45;
+.pos-app:has(.pos-shift-panel) .pos-page {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 0 30px;
 }
-.pos-page:has(.pos-workflow-steps) .pos-step-state {
-  padding: 3px 6px;
-  font-size: 8px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-workspace {
-  gap: 13px;
-}
-.pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) {
-  border: 1px solid #e3e7ec;
-  border-radius: 8px;
-  background: #fff;
-}
-.pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) {
-  padding: 14px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-panel-heading {
-  margin-bottom: 12px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-panel-heading h2 {
-  font-size: 15px !important;
-  line-height: 1.4;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-panel-heading p {
-  font-size: 10px !important;
-  line-height: 1.5;
-}
-.pos-page:has(.pos-workflow-steps) .pos-search-wrap {
-  height: 40px;
-  border-radius: 6px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-search-wrap input {
-  font-size: 12px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-category-list {
-  gap: 7px;
-  padding: 11px 0 12px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-category-list button {
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 10px !important;
-  font-weight: 650;
-}
-.pos-page:has(.pos-workflow-steps) .pos-product-grid { gap: 10px; }
-.pos-page:has(.pos-workflow-steps) .pos-product-card {
-  border: 1px solid #e6e9ee;
-  border-radius: 7px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-product-info { padding: 11px; }
-.pos-page:has(.pos-workflow-steps) .pos-product-category,
-.pos-page:has(.pos-workflow-steps) .pos-product-stock {
-  font-size: 9px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-product-info h3 {
-  min-height: 36px;
-  font-size: 12px !important;
-  line-height: 1.45;
-  font-weight: 700;
-}
-.pos-page:has(.pos-workflow-steps) .pos-variant-label {
-  gap: 5px;
-  font-size: 10px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-variant-label select {
-  min-height: 32px;
-  height: 32px;
-  font-size: 10px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-product-bottom > strong {
-  font-size: 14px !important;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-add-button {
-  min-height: 32px;
-  padding: 0 10px;
-  border-radius: 5px;
-  font-size: 10px !important;
-  font-weight: 700;
-}
-.pos-page:has(.pos-workflow-steps) .pos-cart-item-main strong {
-  font-size: 11px !important;
-  line-height: 1.4;
-}
-.pos-page:has(.pos-workflow-steps) .pos-cart-item-main :is(span,small) {
-  font-size: 10px !important;
-  line-height: 1.45;
-}
-.pos-page:has(.pos-workflow-steps) .pos-cart-item-bottom > strong,
-.pos-page:has(.pos-workflow-steps) .pos-totals > div {
-  font-size: 11px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-grand-total strong {
-  font-size: 23px !important;
-  font-weight: 800;
-}
-.pos-page:has(.pos-workflow-steps) .pos-form-section-title {
-  font-size: 10px !important;
-  letter-spacing: .04em;
-}
-.pos-page:has(.pos-workflow-steps) :is(.pos-customer-fields input,.pos-discount-row input,.pos-payment-inputs input,.pos-payment-row-heading select) {
-  min-height: 34px;
-  height: 34px;
-  border-radius: 5px;
-  font-size: 11px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-payment-inputs label {
-  font-size: 10px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-payment-row { padding: 9px; }
-.pos-page:has(.pos-workflow-steps) .pos-complete-button {
-  min-height: 43px;
-  border-radius: 6px;
-  font-size: 12px !important;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-secure-note { font-size: 9px !important; }
-@media (max-width: 850px) {
-  .pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) { padding: 12px; }
-}
-
-
-/* NMK New Sale — translated from the supplied Aura Retail HTML reference.
-   Scoped to checkout so inventory, reports and history retain their existing UI. */
-.pos-app:has(.pos-workflow-steps) {
-  --pos-navy: #00288e;
-  --pos-navy-2: #1e40af;
-  --pos-ink: #191c1e;
-  --pos-muted: #626b78;
-  --pos-line: #e0e3e5;
-  background: #f7f9fb;
-  color: #191c1e;
-  font-family: "Plus Jakarta Sans", Inter, "Segoe UI", Arial, sans-serif;
-}
-.pos-app:has(.pos-workflow-steps) .pos-topbar {
-  min-height: 64px;
-  padding: 0 20px;
-  background: #fff;
-  color: #191c1e;
-  border-bottom: 1px solid #eceef0;
-  box-shadow: 0 1px 8px rgba(0,0,0,.04);
-}
-.pos-app:has(.pos-workflow-steps) .pos-brand strong { color: #191c1e; font-size: 16px; }
-.pos-app:has(.pos-workflow-steps) .pos-brand strong span { color: #00288e; }
-.pos-app:has(.pos-workflow-steps) .pos-brand small { color: #626b78; }
-.pos-app:has(.pos-workflow-steps) .pos-back-button {
-  color: #00288e;
-  border-color: #e0e3e5;
-  border-radius: 8px;
-}
-.pos-app:has(.pos-workflow-steps) .pos-topbar-right { gap: 14px; }
-.pos-app:has(.pos-workflow-steps) .pos-location-picker { color: #626b78; }
-.pos-app:has(.pos-workflow-steps) .pos-location-picker select {
-  min-height: 34px;
-  color: #191c1e;
-  background: #f2f4f6;
-  border-color: #e0e3e5;
-  border-radius: 7px;
-}
-.pos-app:has(.pos-workflow-steps) .pos-cashier { color: #444653; }
-.pos-app:has(.pos-workflow-steps) .pos-sticky-nav {
-  top: 64px;
-  margin-bottom: 12px;
-  padding: 8px 20px;
+.pos-app:has(.pos-shift-panel) .pos-sticky-nav {
+  position: sticky;
+  top: 53px;
+  z-index: 50;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 7px 16px;
   background: rgba(255,255,255,.97);
-  border-bottom: 1px solid #e6e8ea;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15,23,42,.025);
   backdrop-filter: blur(12px);
 }
-.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner {
+.pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner {
   display: flex;
-  justify-content: center;
-  gap: 4px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  width: min(1720px, 100%);
+  margin: 0 auto;
   overflow-x: auto;
   scrollbar-width: none;
 }
-.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner::-webkit-scrollbar { display: none; }
-.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner .pos-tab-button {
+.pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner::-webkit-scrollbar { display: none; }
+.pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner .pos-tab-button {
   width: auto;
   min-width: max-content;
-  min-height: 36px;
-  padding: 0 12px;
-  white-space: nowrap;
+  min-height: 33px;
+  padding: 0 13px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 999px;
   background: transparent;
-  color: #565e74;
+  color: #64748b;
   font-size: 11px;
   font-weight: 650;
+  white-space: nowrap;
 }
-.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner .pos-tab-button.active {
+.pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner .pos-tab-button:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+.pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner .pos-tab-button.active {
   background: #1e40af;
   color: #fff;
-  box-shadow: 0 2px 5px rgba(0,40,142,.14);
+  box-shadow: 0 1px 3px rgba(30,64,175,.2);
 }
-.pos-app:has(.pos-workflow-steps) .pos-page {
-  width: 100%;
-  max-width: 1800px;
-  padding: 10px 18px 32px;
+.pos-app:has(.pos-shift-panel) .pos-page > .pos-alert,
+.pos-app:has(.pos-shift-panel) .pos-page > .pos-shift-panel,
+.pos-app:has(.pos-shift-panel) .pos-page > .pos-workspace {
+  width: min(1720px, calc(100% - 32px));
+  margin-left: auto;
+  margin-right: auto;
 }
-.pos-page:has(.pos-workflow-steps) .pos-shift-panel {
-  grid-template-columns: minmax(250px, .9fr) minmax(0, 2.1fr);
-  gap: 12px 18px;
-  margin-bottom: 12px;
-  padding: 13px 15px !important;
-  border: 1px solid #e6e8ea;
-  border-radius: 9px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,.025);
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading {
-  align-items: center;
-  padding: 0 10px 0 0;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading h2 {
-  color: #191c1e;
-  font-size: 14px !important;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading p { color: #626b78; font-size: 10px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-shift-heading .pos-eyebrow {
-  color: #00288e;
-  font-size: 9px !important;
-  letter-spacing: .1em;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-status {
-  border-radius: 5px;
-  font-size: 9px;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-controls label,
-.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls label {
-  color: #444653;
-  font-size: 10px !important;
-  font-weight: 650;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-controls :is(input,select),
-.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls :is(input,select) {
-  min-height: 34px;
-  height: 34px;
-  border: 1px solid #c4c5d5;
-  border-radius: 6px;
-  background: #f7f9fb;
-  color: #191c1e;
-  font-size: 11px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-shift-controls .pos-button.primary {
-  background: #00288e;
-  border-color: #00288e;
-}
-.pos-page:has(.pos-workflow-steps) .pos-workflow-steps {
+.pos-app:has(.pos-shift-panel) .pos-page > .pos-alert { margin-bottom: 12px; }
+.pos-app:has(.pos-shift-panel) .pos-shift-panel {
   display: grid;
-  grid-template-columns: repeat(3,minmax(0,1fr));
-  gap: 9px;
-  margin: 0 0 12px;
-  padding: 9px;
-  border: 1px solid #e6e8ea;
-  border-radius: 9px;
+  grid-template-columns: minmax(230px, .85fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 10px 22px;
+  margin-bottom: 14px;
+  padding: 17px 19px;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
   background: #fff;
+  box-shadow: 0 1px 3px rgba(15,23,42,.025);
 }
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step {
-  min-height: 54px;
-  padding: 8px 10px;
-  border: 1px solid #e0e3e5;
-  border-radius: 7px;
-  background: #f2f4f6;
+.pos-app:has(.pos-shift-panel) .pos-shift-heading {
+  align-items: center;
+  gap: 10px;
+  margin: 0;
 }
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step.gate {
-  border-color: #f0c8c5;
-  background: #fff1ef;
+.pos-app:has(.pos-shift-panel) .pos-shift-heading > div { display: grid; gap: 3px; }
+.pos-app:has(.pos-shift-panel) .pos-eyebrow {
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
 }
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step.complete {
-  border-color: #b9dfca;
-  background: #eff8f2;
+.pos-app:has(.pos-shift-panel) .pos-shift-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.035em;
 }
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step .pos-step-number {
-  width: 26px;
-  height: 26px;
-  flex-basis: 26px;
-  background: #00288e;
-  font-size: 11px;
+.pos-app:has(.pos-shift-panel) .pos-shift-heading p {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 550;
 }
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step.gate .pos-step-number { background: #ba1a1a; }
-.pos-page:has(.pos-workflow-steps) .pos-workflow-step.complete .pos-step-number { background: #18794e; }
-.pos-page:has(.pos-workflow-steps) .pos-step-title {
-  color: #191c1e;
-  font-size: 10px !important;
-  font-weight: 750;
+.pos-app:has(.pos-shift-panel) .pos-shift-status {
+  padding: 4px 8px;
+  border: 1px solid #fecdd3;
+  border-radius: 5px;
+  background: #fff1f2;
+  color: #e11d48;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  white-space: nowrap;
 }
-.pos-page:has(.pos-workflow-steps) .pos-step-copy p { color: #626b78; font-size: 9px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-workspace {
-  grid-template-columns: minmax(0,1.85fr) minmax(350px,.95fr);
-  gap: 13px;
+.pos-app:has(.pos-shift-panel) .pos-shift-status.open {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
 }
-.pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) {
-  padding: 14px;
-  border: 1px solid #e0e3e5;
-  border-radius: 9px;
-  background: #fff;
-  box-shadow: 0 2px 7px rgba(25,28,30,.035);
-}
-.pos-page:has(.pos-workflow-steps) .pos-panel-heading h2 {
-  color: #191c1e;
-  font-size: 15px !important;
-  font-weight: 750;
-}
-.pos-page:has(.pos-workflow-steps) .pos-panel-heading p { color: #626b78; font-size: 10px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-search-wrap {
-  height: 40px;
-  padding: 0 12px;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  background: #f2f4f6;
-}
-.pos-page:has(.pos-workflow-steps) .pos-search-wrap:focus-within {
-  border-color: #00288e;
-  background: #fff;
-  box-shadow: 0 0 0 2px rgba(0,40,142,.12);
-}
-.pos-page:has(.pos-workflow-steps) .pos-search-wrap input { color: #191c1e; font-size: 11px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-category-list {
-  gap: 6px;
-  padding: 10px 0 12px;
-  border-bottom: 1px solid #f2f4f6;
-}
-.pos-page:has(.pos-workflow-steps) .pos-category-list button {
-  padding: 6px 11px;
-  border: 0;
-  border-radius: 6px;
-  background: #f2f4f6;
-  color: #565e74;
-  font-size: 10px !important;
-  font-weight: 650;
-}
-.pos-page:has(.pos-workflow-steps) .pos-category-list button.selected {
-  background: #00288e;
-  color: #fff;
-}
-.pos-page:has(.pos-workflow-steps) .pos-product-grid {
-  grid-template-columns: repeat(3,minmax(0,1fr));
+.pos-app:has(.pos-shift-panel) .pos-shift-controls {
+  display: grid;
+  grid-template-columns: minmax(140px,1.1fr) minmax(135px,.8fr) auto;
+  align-items: end;
   gap: 10px;
 }
-.pos-page:has(.pos-workflow-steps) .pos-product-card {
-  border: 1px solid #e6e8ea;
+.pos-app:has(.pos-shift-panel) .pos-shift-controls label,
+.pos-app:has(.pos-shift-panel) .pos-cash-movement-controls label {
+  gap: 5px;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-controls :is(input,select),
+.pos-app:has(.pos-shift-panel) .pos-cash-movement-controls :is(input,select),
+.pos-app:has(.pos-shift-panel) .pos-register-create input {
+  height: 35px;
+  min-height: 35px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 11px;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-controls .pos-button,
+.pos-app:has(.pos-shift-panel) .pos-cash-movement-controls .pos-button,
+.pos-app:has(.pos-shift-panel) .pos-register-create .pos-button {
+  min-height: 35px;
+  padding: 0 15px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-controls .pos-button.primary {
+  border-color: #2563eb;
+  background: #2563eb;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-controls .pos-button.primary:hover:not(:disabled) { background: #1d4ed8; }
+.pos-app:has(.pos-shift-panel) .pos-shift-expected {
+  padding: 0 4px;
+  color: #64748b;
+  font-size: 10px;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-expected strong { color: #0f172a; font-size: 14px; }
+.pos-app:has(.pos-shift-panel) .pos-cash-movement-controls,
+.pos-app:has(.pos-shift-panel) .pos-register-create {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 11px;
+  border-top: 1px solid #f1f5f9;
+}
+.pos-app:has(.pos-shift-panel) .pos-cash-movement-controls {
+  grid-template-columns: minmax(130px,.8fr) minmax(130px,.8fr) minmax(180px,1.5fr) auto;
+}
+.pos-app:has(.pos-shift-panel) .pos-register-create {
+  grid-template-columns: auto minmax(90px,.55fr) minmax(140px,1fr) auto;
+  gap: 8px;
+}
+.pos-app:has(.pos-shift-panel) .pos-register-create strong { color: #2563eb; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-register-create .pos-button.secondary {
+  border-color: #cbd5e1;
+  color: #334155;
+}
+.pos-app:has(.pos-shift-panel) .pos-shift-closed-note { grid-column: 1 / -1; color: #b45309; font-size: 10px; }
+
+.pos-app:has(.pos-shift-panel) .pos-workspace {
+  display: grid;
+  grid-template-columns: minmax(0,7fr) minmax(380px,5fr);
+  gap: 18px;
+  align-items: start;
+}
+.pos-app:has(.pos-shift-panel) :is(.pos-catalog-panel,.pos-cart-panel) {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15,23,42,.025);
+}
+.pos-app:has(.pos-shift-panel) .pos-panel-heading {
+  gap: 12px;
+  margin-bottom: 13px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.pos-app:has(.pos-shift-panel) .pos-panel-heading h2 {
+  margin: 0 0 3px;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+.pos-app:has(.pos-shift-panel) .pos-panel-heading p { color: #64748b; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-icon-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #fff;
+  color: #64748b;
+}
+.pos-app:has(.pos-shift-panel) .pos-search-wrap {
+  height: 41px;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
+  background: #f8fafc;
+  color: #94a3b8;
+}
+.pos-app:has(.pos-shift-panel) .pos-search-wrap:focus-within {
+  border-color: #3b82f6;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.12);
+}
+.pos-app:has(.pos-shift-panel) .pos-search-wrap input { color: #1e293b; font-size: 11px; }
+.pos-app:has(.pos-shift-panel) .pos-search-wrap input::placeholder { color: #94a3b8; }
+.pos-app:has(.pos-shift-panel) .pos-search-hint { color: #94a3b8; }
+.pos-app:has(.pos-shift-panel) .pos-category-list {
+  gap: 6px;
+  padding: 11px 0 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.pos-app:has(.pos-shift-panel) .pos-category-list button {
+  padding: 6px 11px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
+}
+.pos-app:has(.pos-shift-panel) .pos-category-list button.selected {
+  border-color: #0f172a;
+  background: #0f172a;
+  color: #fff;
+}
+.pos-app:has(.pos-shift-panel) .pos-stock-policy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0 12px;
+  color: #64748b;
+  font-size: 9px;
+}
+.pos-app:has(.pos-shift-panel) .pos-stock-policy span { display: inline-flex; align-items: center; gap: 6px; }
+.pos-app:has(.pos-shift-panel) .pos-stock-policy svg { flex: 0 0 auto; color: #94a3b8; }
+.pos-app:has(.pos-shift-panel) .pos-stock-policy small {
+  color: #94a3b8;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-shift-panel) .pos-product-grid {
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 11px;
+}
+.pos-app:has(.pos-shift-panel) .pos-product-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
   background: #fff;
   box-shadow: none;
+  transform: none;
 }
-.pos-page:has(.pos-workflow-steps) .pos-product-card:hover {
-  border-color: #b8c4ff;
-  box-shadow: 0 5px 14px rgba(0,40,142,.07);
+.pos-app:has(.pos-shift-panel) .pos-product-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 3px 10px rgba(37,99,235,.06);
+  transform: none;
 }
-.pos-page:has(.pos-workflow-steps) .pos-product-info { padding: 11px; }
-.pos-page:has(.pos-workflow-steps) .pos-product-category { color: #565e74; font-size: 8px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-product-stock { font-size: 8px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-product-info h3 {
-  min-height: 36px;
-  color: #191c1e;
-  font-size: 11px !important;
+.pos-app:has(.pos-shift-panel) .pos-product-info { padding: 12px; }
+.pos-app:has(.pos-shift-panel) .pos-product-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+.pos-app:has(.pos-shift-panel) .pos-product-category {
+  color: #94a3b8;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+.pos-app:has(.pos-shift-panel) .pos-product-stock {
+  flex: 0 0 auto;
+  color: #047857;
+  font-size: 8px;
   font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-product-stock:before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin: 0 4px 1px 0;
+  border-radius: 50%;
+  background: #10b981;
+}
+.pos-app:has(.pos-shift-panel) .pos-product-stock.out-stock { color: #be123c; }
+.pos-app:has(.pos-shift-panel) .pos-product-stock.out-stock:before { background: #f43f5e; }
+.pos-app:has(.pos-shift-panel) .pos-product-info h3 {
+  min-height: 36px;
+  margin: 0 0 9px;
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 800;
   line-height: 1.45;
 }
-.pos-page:has(.pos-workflow-steps) .pos-variant-label { color: #626b78; font-size: 9px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-variant-label select {
-  min-height: 31px;
+.pos-app:has(.pos-shift-panel) .pos-variant-label {
+  gap: 4px;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.pos-app:has(.pos-shift-panel) .pos-variant-label select {
   height: 31px;
-  border: 1px solid #e0e3e5;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  background: #f7f9fb;
-  color: #191c1e;
-  font-size: 9px !important;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 9px;
 }
-.pos-page:has(.pos-workflow-steps) .pos-product-bottom {
-  padding-top: 8px;
-  border-top: 1px solid #f2f4f6;
+.pos-app:has(.pos-shift-panel) .pos-product-bottom {
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
 }
-.pos-page:has(.pos-workflow-steps) .pos-product-bottom > strong { color: #191c1e; font-size: 13px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-add-button {
-  min-height: 31px;
+.pos-app:has(.pos-shift-panel) .pos-product-bottom > strong { color: #0f172a; font-size: 13px; font-weight: 800; }
+.pos-app:has(.pos-shift-panel) .pos-add-button {
+  min-height: 30px;
   padding: 0 9px;
   border-radius: 6px;
-  background: #00288e;
-  font-size: 9px !important;
+  background: #0f172a;
+  font-size: 9px;
+  font-weight: 800;
 }
-.pos-page:has(.pos-workflow-steps) .pos-cart-panel {
-  position: sticky;
-  top: 140px;
-  max-height: calc(100vh - 152px);
-  overflow-y: auto;
-}
-.pos-page:has(.pos-workflow-steps) .pos-cart-panel .pos-panel-heading {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #f2f4f6;
-}
-.pos-page:has(.pos-workflow-steps) .pos-cart-items { max-height: 220px; }
-.pos-page:has(.pos-workflow-steps) .pos-cart-item { padding: 9px 0; }
-.pos-page:has(.pos-workflow-steps) .pos-cart-item-main strong { color: #191c1e; font-size: 10px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-cart-item-main :is(span,small) { color: #626b78; font-size: 9px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-quantity-control {
-  border-color: #e0e3e5;
-  border-radius: 6px;
-}
-.pos-page:has(.pos-workflow-steps) .pos-quantity-control button { background: #f2f4f6; color: #00288e; }
-.pos-page:has(.pos-workflow-steps) .pos-cart-item-bottom > strong { color: #191c1e; font-size: 10px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-cart-form,
-.pos-page:has(.pos-workflow-steps) .pos-totals { border-color: #e6e8ea; }
-.pos-page:has(.pos-workflow-steps) .pos-form-section-title { color: #191c1e; font-size: 10px !important; }
-.pos-page:has(.pos-workflow-steps) :is(.pos-customer-fields input,.pos-discount-row input,.pos-payment-inputs input,.pos-payment-row-heading select) {
-  min-height: 33px;
-  height: 33px;
-  border: 1px solid #e0e3e5;
-  border-radius: 6px;
-  background: #f7f9fb;
-  color: #191c1e;
-  font-size: 10px !important;
-}
-.pos-page:has(.pos-workflow-steps) .pos-totals > div { color: #626b78; font-size: 10px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-totals strong { color: #191c1e; }
-.pos-page:has(.pos-workflow-steps) .pos-grand-total strong { color: #00288e; font-size: 22px !important; }
-.pos-page:has(.pos-workflow-steps) .pos-payment-row {
-  border-color: #e6e8ea;
-  border-radius: 7px;
-  background: #f7f9fb;
-}
-.pos-page:has(.pos-workflow-steps) .pos-payment-row-heading select { background: #fff; }
-.pos-page:has(.pos-workflow-steps) .pos-add-split { color: #00288e; }
-.pos-page:has(.pos-workflow-steps) .pos-complete-button {
-  min-height: 44px;
-  border-radius: 7px;
-  background: #00288e;
-  font-size: 11px !important;
-  box-shadow: 0 3px 8px rgba(0,40,142,.14);
-}
-.pos-page:has(.pos-workflow-steps) .pos-complete-button:hover:not(:disabled) { background: #1e40af; }
-.pos-page:has(.pos-workflow-steps) .pos-secure-note { color: #626b78; font-size: 9px !important; }
+.pos-app:has(.pos-shift-panel) .pos-add-button:hover:not(:disabled) { background: #1e40af; }
 
-@media (max-width: 1100px) {
-  .pos-page:has(.pos-workflow-steps) .pos-workspace { grid-template-columns: minmax(0,1.45fr) minmax(320px,1fr); }
-  .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.pos-app:has(.pos-shift-panel) .pos-cart-panel {
+  position: sticky;
+  top: 122px;
+  max-height: calc(100vh - 136px);
+  overflow-y: auto;
+  padding: 16px;
 }
-@media (max-width: 850px) {
-  .pos-app:has(.pos-workflow-steps) .pos-sticky-nav { top: 64px; }
-  .pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner { justify-content: flex-start; }
-  .pos-page:has(.pos-workflow-steps) .pos-shift-panel { grid-template-columns: 1fr; }
-  .pos-page:has(.pos-workflow-steps) .pos-workflow-steps { grid-template-columns: 1fr; }
-  .pos-page:has(.pos-workflow-steps) .pos-workspace { grid-template-columns: 1fr; }
-  .pos-page:has(.pos-workflow-steps) .pos-cart-panel { position: static; max-height: none; }
-  .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.pos-app:has(.pos-shift-panel) .pos-cart-panel .pos-panel-heading { margin-bottom: 8px; }
+.pos-app:has(.pos-shift-panel) .pos-cart-panel .pos-panel-heading h2 { font-size: 15px; }
+.pos-app:has(.pos-shift-panel) .pos-count {
+  min-width: 22px;
+  height: 21px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 10px;
+}
+.pos-app:has(.pos-shift-panel) .pos-text-button {
+  color: #e11d48;
+  font-size: 10px;
+  font-weight: 750;
+}
+.pos-app:has(.pos-shift-panel) .pos-cart-items {
+  max-height: 235px;
+  border-top: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-cart-item { padding: 10px 0; }
+.pos-app:has(.pos-shift-panel) .pos-cart-item-main strong { color: #0f172a; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-cart-item-main span { color: #64748b; font-size: 9px; }
+.pos-app:has(.pos-shift-panel) .pos-cart-item-main small { color: #94a3b8; font-size: 8px; }
+.pos-app:has(.pos-shift-panel) .pos-remove-button {
+  width: 25px;
+  height: 25px;
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+}
+.pos-app:has(.pos-shift-panel) .pos-remove-button:hover { color: #e11d48; }
+.pos-app:has(.pos-shift-panel) .pos-cart-item-bottom { margin-top: 7px; }
+.pos-app:has(.pos-shift-panel) .pos-quantity-control {
+  gap: 5px;
+  padding: 2px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+.pos-app:has(.pos-shift-panel) .pos-quantity-control button {
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  color: #64748b;
+}
+.pos-app:has(.pos-shift-panel) .pos-quantity-control span { min-width: 18px; color: #1e293b; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-cart-item-bottom > strong { color: #0f172a; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-cart-form,
+.pos-app:has(.pos-shift-panel) .pos-totals { border-color: #f1f5f9; }
+.pos-app:has(.pos-shift-panel) .pos-cart-form { padding: 12px 0 11px; }
+.pos-app:has(.pos-shift-panel) .pos-form-section-title {
+  gap: 7px;
+  margin-bottom: 9px;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 800;
+}
+.pos-app:has(.pos-shift-panel) .pos-form-section-title svg { color: #2563eb; }
+.pos-app:has(.pos-shift-panel) .pos-form-section-title > span { color: #94a3b8; font-size: 9px; }
+.pos-app:has(.pos-shift-panel) .pos-customer-fields { gap: 7px; }
+.pos-app:has(.pos-shift-panel) :is(.pos-customer-fields input,.pos-discount-row input,.pos-payment-inputs input) {
+  height: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #1e293b;
+  font-size: 9px;
+}
+.pos-app:has(.pos-shift-panel) .pos-discount-row {
+  margin-top: 9px;
+  color: #334155;
+  font-size: 10px;
+}
+.pos-app:has(.pos-shift-panel) .pos-discount-row input { width: 105px; }
+.pos-app:has(.pos-shift-panel) .pos-retry-note { font-size: 9px; line-height: 1.45; }
+.pos-app:has(.pos-shift-panel) .pos-totals { gap: 7px; padding: 12px 0; }
+.pos-app:has(.pos-shift-panel) .pos-totals > div { color: #64748b; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-totals strong { color: #0f172a; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-totals .discount-value { color: #e11d48; }
+.pos-app:has(.pos-shift-panel) .pos-totals .pos-grand-total {
+  align-items: baseline;
+  padding-top: 8px;
+  color: #0f172a;
+}
+.pos-app:has(.pos-shift-panel) .pos-grand-total span { color: #0f172a; font-size: 13px; font-weight: 800; }
+.pos-app:has(.pos-shift-panel) .pos-grand-total strong {
+  color: #1d4ed8;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-section { padding: 12px 0 9px; }
+.pos-app:has(.pos-shift-panel) .pos-payment-row {
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #f8fafc;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-row-heading select {
+  height: 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #334155;
+  font-size: 10px;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-inputs label { color: #64748b; font-size: 9px; }
+.pos-app:has(.pos-shift-panel) .pos-add-split { color: #2563eb; font-size: 10px; }
+.pos-app:has(.pos-shift-panel) :is(.pos-payment-match,.pos-payment-mismatch) { font-size: 9px; }
+.pos-app:has(.pos-shift-panel) .pos-change-row { font-size: 10px; }
+.pos-app:has(.pos-shift-panel) .pos-complete-button {
+  min-height: 45px;
+  margin-top: 7px;
+  padding: 0 13px;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 2px 5px rgba(37,99,235,.16);
+}
+.pos-app:has(.pos-shift-panel) .pos-complete-button:hover:not(:disabled) { background: #1d4ed8; }
+.pos-app:has(.pos-shift-panel) .pos-complete-button:disabled {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+  color: #94a3b8;
+  box-shadow: none;
+}
+.pos-app:has(.pos-shift-panel) .pos-secure-note {
+  margin: 8px 3px 0;
+  color: #94a3b8;
+  font-size: 9px;
+}
+.pos-app:has(.pos-shift-panel) .pos-cart-empty {
+  min-height: 135px;
+  color: #94a3b8;
+}
+.pos-app:has(.pos-shift-panel) .pos-cart-empty strong { color: #475569; font-size: 12px; }
+.pos-app:has(.pos-shift-panel) .pos-cart-empty span { font-size: 10px; }
+
+@media (max-width: 1120px) {
+  .pos-app:has(.pos-shift-panel) .pos-workspace { grid-template-columns: minmax(0,1.15fr) minmax(340px,.9fr); gap: 13px; }
+  .pos-app:has(.pos-shift-panel) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .pos-app:has(.pos-shift-panel) .pos-shift-panel { grid-template-columns: 1fr; }
+  .pos-app:has(.pos-shift-panel) .pos-shift-controls { grid-template-columns: minmax(150px,1fr) minmax(150px,1fr) auto; }
+}
+@media (max-width: 820px) {
+  .pos-app:has(.pos-shift-panel) .pos-workspace { grid-template-columns: 1fr; }
+  .pos-app:has(.pos-shift-panel) .pos-cart-panel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+  .pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner { justify-content: flex-start; }
 }
 @media (max-width: 600px) {
-  .pos-app:has(.pos-workflow-steps) .pos-topbar { padding: 0 12px; }
-  .pos-app:has(.pos-workflow-steps) .pos-cashier { display: none; }
-  .pos-app:has(.pos-workflow-steps) .pos-sticky-nav { padding: 7px 10px; }
-  .pos-app:has(.pos-workflow-steps) .pos-page { padding-left: 10px; padding-right: 10px; }
-  .pos-page:has(.pos-workflow-steps) .pos-shift-controls,
-  .pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls { grid-template-columns: 1fr 1fr; }
-  .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) { padding: 11px; }
+  .pos-app:has(.pos-shift-panel) .pos-topbar { min-height: 53px; padding: 6px 11px; }
+  .pos-app:has(.pos-shift-panel) .pos-topbar-right { gap: 0; }
+  .pos-app:has(.pos-shift-panel) .pos-location-picker > span { display: none; }
+  .pos-app:has(.pos-shift-panel) .pos-location-picker select { max-width: 42vw; min-height: 32px; font-size: 9px; }
+  .pos-app:has(.pos-shift-panel) .pos-cashier { display: none; }
+  .pos-app:has(.pos-shift-panel) .pos-sticky-nav { padding: 6px 9px; }
+  .pos-app:has(.pos-shift-panel) .pos-sticky-nav-inner .pos-tab-button { min-height: 31px; padding: 0 10px; font-size: 10px; }
+  .pos-app:has(.pos-shift-panel) .pos-page > :is(.pos-alert,.pos-shift-panel,.pos-workspace) { width: calc(100% - 20px); }
+  .pos-app:has(.pos-shift-panel) .pos-shift-panel { padding: 13px; }
+  .pos-app:has(.pos-shift-panel) .pos-shift-heading { align-items: flex-start; }
+  .pos-app:has(.pos-shift-panel) .pos-shift-controls,
+  .pos-app:has(.pos-shift-panel) .pos-cash-movement-controls,
+  .pos-app:has(.pos-shift-panel) .pos-register-create { grid-template-columns: 1fr 1fr; }
+  .pos-app:has(.pos-shift-panel) .pos-register-create strong { grid-column: 1 / -1; }
+  .pos-app:has(.pos-shift-panel) :is(.pos-catalog-panel,.pos-cart-panel) { padding: 12px; }
+  .pos-app:has(.pos-shift-panel) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .pos-app:has(.pos-shift-panel) .pos-product-info { padding: 9px; }
+  .pos-app:has(.pos-shift-panel) .pos-product-meta { flex-direction: column; gap: 3px; }
+  .pos-app:has(.pos-shift-panel) .pos-stock-policy { align-items: flex-start; flex-direction: column; }
+  .pos-app:has(.pos-shift-panel) .pos-customer-fields { grid-template-columns: 1fr; }
+  .pos-app:has(.pos-shift-panel) .pos-payment-inputs { grid-template-columns: 1fr; }
 }
