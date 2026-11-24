@@ -1085,3 +1085,155 @@
   }
 }
 
+
+
+/* Checkout text-overlap fix: keep labels, values and payment choices in
+   separate, shrink-safe tracks in both normal and expanded bill views. */
+.pos-app:has(.pos-shift-panel) .pos-form-section-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 4px;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-form-section-title > span {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-shift-panel) .pos-customer-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-customer-fields input {
+  width: 100%;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-discount-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  justify-items: stretch;
+  gap: 7px;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-discount-row > label {
+  min-width: 0;
+  line-height: 1.4;
+}
+.pos-app:has(.pos-shift-panel) .pos-discount-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-quick-values {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-quick-values button {
+  flex: 0 0 auto;
+  min-width: 40px;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-shift-panel) .pos-discount-controls input {
+  flex: 1 1 105px;
+  width: 105px;
+  min-width: 85px;
+  max-width: 150px;
+}
+.pos-app:has(.pos-shift-panel) .pos-totals > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  column-gap: 12px;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-totals > div > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pos-app:has(.pos-shift-panel) .pos-totals > div > strong {
+  min-width: max-content;
+  text-align: right;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-shift-panel) .pos-totals .pos-grand-total {
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 10px;
+}
+.pos-app:has(.pos-shift-panel) .pos-grand-total span {
+  min-width: 0;
+  white-space: normal;
+}
+.pos-app:has(.pos-shift-panel) .pos-grand-total strong {
+  font-size: clamp(19px, 2vw, 24px);
+  white-space: nowrap;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-row-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-method-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1 1 220px;
+  width: 100%;
+  min-width: 0;
+  gap: 5px;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-method-tabs button {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 5px;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-inputs {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: 0;
+  gap: 10px;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-inputs label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 5px;
+  overflow-wrap: anywhere;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-inputs input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.pos-app:has(.pos-shift-panel) .pos-payment-row,
+.pos-app:has(.pos-shift-panel) .pos-payment-section,
+.pos-app:has(.pos-shift-panel) .pos-cart-form,
+.pos-app:has(.pos-shift-panel) .pos-totals {
+  min-width: 0;
+}
+@media (max-width: 700px) {
+  .pos-app:has(.pos-shift-panel) .pos-customer-fields,
+  .pos-app:has(.pos-shift-panel) .pos-payment-inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pos-app:has(.pos-shift-panel) .pos-payment-method-tabs {
+    flex-basis: 100%;
+  }
+  .pos-app:has(.pos-shift-panel) .pos-totals > div {
+    column-gap: 8px;
+  }
+}
