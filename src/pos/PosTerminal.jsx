@@ -3604,6 +3604,7 @@ export default function PosTerminal() {
                     {billExpanded ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
                   </button>
                 {cart.length > 0 && <button type="button" className="pos-text-button" onClick={() => { setCart([]); pendingKey.current = null; setPendingPayload(null); setRetryPending(false); }} disabled={retryPending}>Clear all</button>}
+                </div>
               </div>
               <div className="pos-bill-status">
                 <span><ShoppingCart size={14} /> Current sale <strong>{cart.length ? "Items added" : "Draft bill"}</strong></span>
