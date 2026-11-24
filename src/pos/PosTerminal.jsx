@@ -3457,6 +3457,30 @@ export default function PosTerminal() {
 
         {locationStockCountLocked && <div className="pos-alert error" role="alert"><AlertCircle size={18} /><span>Physical stock count in progress. Sales and stock movements are temporarily frozen at this location.</span></div>}
 
+        <div className="pos-workflow-steps" aria-label="Checkout workflow">
+          <article className={`pos-workflow-step ${shift?.status === "OPEN" ? "complete" : "gate"}`}>
+            <span className="pos-step-number">{shift?.status === "OPEN" ? "✓" : "1"}</span>
+            <div className="pos-step-copy">
+              <div className="pos-step-title">STEP 1: Cash Register <span className={`pos-step-state ${shift?.status === "OPEN" ? "success" : "warning"}`}>{shift?.status === "OPEN" ? "SHIFT OPEN" : "ACTIVE GATE"}</span></div>
+              <p>{shift?.status === "OPEN" ? "Cashier shift verified and ready" : "Open a cashier shift before completing a sale"}</p>
+            </div>
+          </article>
+          <article className={`pos-workflow-step ${shift?.status !== "OPEN" ? "locked" : cart.length ? "complete" : "active"}`}>
+            <span className="pos-step-number">2</span>
+            <div className="pos-step-copy">
+              <div className="pos-step-title">STEP 2: Product Catalogue</div>
+              <p>Select optical frames, lenses and variants</p>
+            </div>
+          </article>
+          <article className={`pos-workflow-step ${shift?.status !== "OPEN" || !cart.length ? "locked" : "active"}`}>
+            <span className="pos-step-number">3</span>
+            <div className="pos-step-copy">
+              <div className="pos-step-title">STEP 3: Current Bill &amp; Invoice</div>
+              <p>Collect payment, complete sale and print receipt</p>
+            </div>
+          </article>
+        </div>
+
         <section className="pos-shift-panel">
           <div className="pos-shift-heading">
             <div>
@@ -3568,16 +3592,18 @@ export default function PosTerminal() {
                     const variant = variants.find((v) => v.variantId === selectedId) || variants[0];
                     const cartQty = cart.find((item) => item.variantId === variant?.variantId)?.quantity || 0;
                     return <article className="pos-product-card" key={product.productId}>
-                      <div className="pos-product-image"><ProductImage src={product.imageUrl} name={product.name} /><span className={variant?.availableQuantity > 0 ? "in-stock" : "out-stock"}>{variant?.availableQuantity > 0 ? `${variant.availableQuantity} available` : "Out of stock"}</span></div>
                       <div className="pos-product-info">
-                        <span className="pos-product-category">{product.category || "Product"} · {product.gender || "Unisex"}</span>
+                        <div className="pos-product-meta">
+                          <span className="pos-product-category">{product.category || "Product"} · {product.gender || "Unisex"}</span>
+                          <span className={`pos-product-stock ${variant?.availableQuantity > 0 ? "in-stock" : "out-stock"}`}>{variant?.availableQuantity > 0 ? `${variant.availableQuantity} available` : "Out of stock"}</span>
+                        </div>
                         <h3>{product.name}</h3>
                         <label className="pos-variant-label">Variant
                           <select value={variant?.variantId || ""} onChange={(e) => setSelectedVariants((current) => ({ ...current, [product.productId]: Number(e.target.value) }))}>
                             {variants.map((v) => <option key={v.variantId} value={v.variantId}>{v.variantName || v.sku} · {v.sku}</option>)}
                           </select>
                         </label>
-                        {variant && <div className="pos-product-bottom"><strong>{money(variant.sellingPrice)}</strong><button type="button" className="pos-add-button" disabled={retryPending || variant.availableQuantity <= cartQty} onClick={() => addToCart(product, variant)}><Plus size={16} /> {cartQty ? `Add more (${cartQty})` : "Add"}</button></div>}
+                        {variant && <div className="pos-product-bottom"><strong>{money(variant.sellingPrice)}</strong><button type="button" className="pos-add-button" disabled={retryPending || variant.availableQuantity <= cartQty} onClick={() => addToCart(product, variant)}><Plus size={15} /> {cartQty ? `In Bill (${cartQty})` : "Add to bill"}</button></div>}
                       </div>
                     </article>;
                   })}
