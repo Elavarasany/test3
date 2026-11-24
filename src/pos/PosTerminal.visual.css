@@ -531,7 +531,7 @@
   .pos-app:has(.pos-workflow-steps) .pos-topbar { padding: 0 12px; }
   .pos-app:has(.pos-workflow-steps) .pos-cashier { display: none; }
   .pos-app:has(.pos-workflow-steps) .pos-sticky-nav { padding: 7px 10px; }
-  .pos-page:has(.pos-workflow-steps) .pos-page { padding-left: 10px; padding-right: 10px; }
+  .pos-app:has(.pos-workflow-steps) .pos-page { padding-left: 10px; padding-right: 10px; }
   .pos-page:has(.pos-workflow-steps) .pos-shift-controls,
   .pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls { grid-template-columns: 1fr 1fr; }
   .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
