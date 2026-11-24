@@ -1623,3 +1623,12 @@
   .pos-shift-controls,
   .pos-cash-movement-controls { grid-template-columns: 1fr; }
 }
+
+
+/* Keep the bill visible below the two sticky POS header bars on desktop. */
+@media (min-width: 851px) {
+  .pos-cart-panel {
+    top: 142px;
+    max-height: calc(100vh - 154px);
+  }
+}
