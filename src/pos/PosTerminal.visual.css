@@ -790,3 +790,156 @@
 @media (max-width: 640px) {
   .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded { inset: 6px !important; padding: 14px !important; border-radius: 12px !important; }
 }
+
+
+/* Expanded bill: fit the complete checkout layout inside the viewport without an inner scrollbar. */
+.pos-app:has(.pos-cart-panel.is-expanded) {
+  overflow: hidden;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.02fr) minmax(420px, .98fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto auto auto auto;
+  column-gap: clamp(18px, 2.2vw, 32px);
+  row-gap: 8px;
+  inset: 12px !important;
+  height: calc(100dvh - 24px) !important;
+  max-height: calc(100dvh - 24px) !important;
+  padding: clamp(16px, 2vh, 24px) clamp(18px, 2vw, 30px) !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-panel-heading,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-bill-status {
+  grid-column: 1 / -1;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-panel-heading {
+  grid-row: 1;
+  position: static;
+  padding: 0 0 8px;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-bill-status {
+  grid-row: 2;
+  margin: 0;
+  padding: 8px 12px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-cart-items,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-cart-empty {
+  grid-column: 1;
+  grid-row: 3 / 9;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  align-content: start;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-cart-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  padding: 2px 10px 2px 0;
+  border: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item-main strong {
+  font-size: 11px;
+  line-height: 1.3;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item-main span { font-size: 10px; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item-main small { font-size: 9px; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item-bottom { margin-top: 7px; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-cart-form {
+  grid-column: 2;
+  grid-row: 3;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-totals {
+  grid-column: 2;
+  grid-row: 4;
+  margin: 0;
+  padding: 8px 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-payment-section {
+  grid-column: 2;
+  grid-row: 5;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-complete-button {
+  grid-column: 2;
+  grid-row: 6;
+  min-height: 44px;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-shift-gate-note {
+  grid-column: 2;
+  grid-row: 7;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-secure-note {
+  grid-column: 2;
+  grid-row: 8;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-form-section-title {
+  margin-bottom: 7px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-customer-fields { gap: 8px; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-customer-fields input,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-discount-row input,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-inputs input {
+  height: 36px;
+  font-size: 11px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-totals { gap: 6px; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-row { padding: 9px; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-section .pos-retry-note { margin: 6px 0; }
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-secure-note { font-size: 9px; }
+@media (max-width: 900px) {
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 14px;
+    inset: 8px !important;
+    height: calc(100dvh - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    padding: 14px !important;
+  }
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-cart-items {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+@media (max-height: 760px) and (min-width: 901px) {
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded {
+    row-gap: 4px;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-item { padding: 6px 8px; }
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-cart-form { padding: 4px 0; }
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-section { padding: 4px 0; }
+}
+@media (max-width: 700px) {
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded {
+    display: block !important;
+    inset: 6px !important;
+    height: calc(100dvh - 12px) !important;
+    max-height: calc(100dvh - 12px) !important;
+    padding: 12px !important;
+    overflow: auto !important;
+  }
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-cart-items {
+    display: block;
+    max-height: none;
+    overflow: visible;
+  }
+}
