@@ -980,3 +980,108 @@
     padding-right: 0;
   }
 }
+
+/* Expanded checkout alignment: prevent payment labels and controls from
+   shrinking into each other when two split tenders are present. */
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-payment-section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+  min-height: 390px;
+  padding: 10px 0 4px;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 10px;
+  flex: 0 0 auto;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-row-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-method-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 300px);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-method-tabs button {
+  min-width: 0;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-inputs label {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-inputs input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-tender-presets {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-tender-presets span {
+  flex: 1 1 100%;
+  margin: 0;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-retry-note {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-add-split {
+  align-self: flex-start;
+  min-height: 28px;
+  white-space: nowrap;
+}
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-match,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-mismatch,
+.pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-change-row {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded > .pos-payment-section {
+    min-height: 0;
+  }
+  .pos-app:has(.pos-cart-panel.is-expanded) .pos-cart-panel.is-expanded .pos-payment-inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
