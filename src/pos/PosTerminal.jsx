@@ -3594,6 +3594,10 @@ export default function PosTerminal() {
                 <div><h2>Current bill <span className="pos-count">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span></h2><p>Items in this transaction</p></div>
                 {cart.length > 0 && <button type="button" className="pos-text-button" onClick={() => { setCart([]); pendingKey.current = null; setPendingPayload(null); setRetryPending(false); }} disabled={retryPending}>Clear all</button>}
               </div>
+              <div className="pos-bill-status">
+                <span><ShoppingCart size={14} /> Current sale <strong>{cart.length ? "Items added" : "Draft bill"}</strong></span>
+                <small>{cart.length ? "Review items and collect payment" : "Add products to start this bill"}</small>
+              </div>
               {cart.length === 0 ? <div className="pos-cart-empty"><ShoppingCart size={34} /><strong>Your bill is empty</strong><span>Select a product and variant to add it here.</span></div> :
                 <div className="pos-cart-items">{cart.map((item) => <div className="pos-cart-item" key={item.variantId}>
                   <div className="pos-cart-item-main"><div><strong>{item.productName}</strong><span>{item.variantName || item.sku}</span><small>{item.sku}</small></div><button type="button" className="pos-remove-button" onClick={() => removeFromCart(item.variantId)} disabled={retryPending} aria-label={`Remove ${item.productName}`}><Trash2 size={16} /></button></div>
@@ -3603,7 +3607,17 @@ export default function PosTerminal() {
               <div className="pos-cart-form">
                 <div className="pos-form-section-title"><UserRound size={16} /> Customer details <span>Optional</span></div>
                 <div className="pos-customer-fields"><input value={customerName} disabled={retryPending} onChange={(e) => setCustomerName(e.target.value)} placeholder="Customer name" maxLength={150} /><input value={customerPhone} disabled={retryPending} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Phone number" maxLength={30} inputMode="tel" /></div>
-                <div className="pos-discount-row"><label htmlFor="pos-discount">Discount (₹)</label><input id="pos-discount" type="number" min="0" max={subtotal} step="0.01" value={discount} disabled={retryPending || !canApplyDiscount} onChange={(e) => setDiscount(e.target.value)} /></div>
+                <div className="pos-discount-row">
+                  <label htmlFor="pos-discount">Discount (₹)</label>
+                  <div className="pos-discount-controls">
+                    <div className="pos-quick-values">
+                      <button type="button" disabled={retryPending || !canApplyDiscount || !subtotal} onClick={() => setDiscount(amount(Math.min(subtotal, subtotal * 0.05)))}>5%</button>
+                      <button type="button" disabled={retryPending || !canApplyDiscount || !subtotal} onClick={() => setDiscount(amount(Math.min(subtotal, subtotal * 0.10)))}>10%</button>
+                      <button type="button" disabled={retryPending || !canApplyDiscount || !subtotal} onClick={() => setDiscount(amount(Math.min(subtotal, 100)))}>₹100</button>
+                    </div>
+                    <input id="pos-discount" type="number" min="0" max={subtotal} step="0.01" value={discount} disabled={retryPending || !canApplyDiscount} onChange={(e) => setDiscount(e.target.value)} />
+                  </div>
+                </div>
                 {!canApplyDiscount && <p className="pos-retry-note">Sale discounts require ADMIN or MANAGER approval.</p>}
               </div>
 
@@ -3616,9 +3630,18 @@ export default function PosTerminal() {
               <div className="pos-payment-section">
                 <div className="pos-form-section-title"><CreditCard size={16} /> Payment method</div>
                 {payments.map((payment, index) => <div className="pos-payment-row" key={index}>
-                  <div className="pos-payment-row-heading"><select aria-label="Payment method" value={payment.paymentMethod} disabled={retryPending} onChange={(e) => updatePayment(index, "paymentMethod", e.target.value)}>
-                    <option value="CASH">Cash</option><option value="UPI">UPI</option><option value="CARD">Card</option>
-                  </select>{payments.length > 1 && <button type="button" className="pos-remove-button" onClick={() => removePayment(index)} disabled={retryPending} aria-label="Remove payment method"><X size={15} /></button>}</div>
+                  <div className="pos-payment-row-heading">
+                    <div className="pos-payment-method-tabs" role="group" aria-label={`Payment method for payment ${index + 1}`}>
+                      {["CASH", "UPI", "CARD"].map((method) => <button key={method} type="button" className={payment.paymentMethod === method ? "active" : ""} disabled={retryPending} onClick={() => updatePayment(index, "paymentMethod", method)}>{method === "CASH" ? "Cash" : method}</button>)}
+                    </div>
+                    {payments.length > 1 && <button type="button" className="pos-remove-button" onClick={() => removePayment(index)} disabled={retryPending} aria-label="Remove payment method"><X size={15} /></button>}
+                  </div>
+                  {payment.paymentMethod === "CASH" && <div className="pos-tender-presets">
+                    <span>Cash received</span>
+                    <button type="button" disabled={retryPending} onClick={() => updatePayment(index, "tenderedAmount", "500")}>₹500</button>
+                    <button type="button" disabled={retryPending} onClick={() => updatePayment(index, "tenderedAmount", "2000")}>₹2,000</button>
+                    <button type="button" disabled={retryPending} onClick={() => updatePayment(index, "tenderedAmount", payment.amount)}>Exact</button>
+                  </div>}
                   <div className="pos-payment-inputs">
                     <label>Amount<input type="number" min="0" step="0.01" value={payment.amount} disabled={retryPending} onChange={(e) => updatePayment(index, "amount", e.target.value)} /></label>
                     {payment.paymentMethod === "CASH" ? <label>Cash received<input type="number" min="0" step="0.01" value={payment.tenderedAmount} disabled={retryPending} onChange={(e) => updatePayment(index, "tenderedAmount", e.target.value)} /></label>
@@ -3636,6 +3659,7 @@ export default function PosTerminal() {
               <button type="button" className="pos-complete-button" onClick={completeSale} disabled={checkoutLoading || !cart.length || !locationId || locationStockCountLocked || !shift?.id || shift.status !== "OPEN" || Math.abs(paymentTotal - grandTotal) > 0.001}>
                 {checkoutLoading ? <><RefreshCw className="pos-spin" size={18} /> Processing sale…</> : retryPending ? <><RefreshCw size={18} /> Retry same checkout · {money(pendingPayload ? pendingPayload.payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0) : grandTotal)}</> : <><Receipt size={18} /> Complete sale · {money(grandTotal)}</>}
               </button>
+              {(!shift?.id || shift.status !== "OPEN") && <p className="pos-shift-gate-note"><AlertCircle size={14} /> Complete sale is locked until the cashier shift is opened above.</p>}
               <p className="pos-secure-note">Prices and stock are verified by the server. Completed sales are recorded with an audit trail.</p>
             </aside>
           </div>
