@@ -1389,3 +1389,237 @@
 .pos-webhook-detail .pos-panel-heading p { margin: 0; color: #8792a0; font-size: 10px; }
 .pos-webhook-detail .pos-webhook-summary { flex-wrap: wrap; justify-content: flex-start; gap: 12px 22px; }
 .pos-webhook-detail .pos-history-table { min-width: 580px; }
+
+
+/* New Sale terminal — Figma-inspired compact workflow layout.
+   Keep NMK's existing navy / muted-gold palette and all checkout behavior. */
+.pos-workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 12px;
+}
+.pos-workflow-step {
+  min-width: 0;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border: 1px solid #e5e9ef;
+  border-radius: 8px;
+  background: #fff;
+}
+.pos-workflow-step .pos-step-number {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #64748b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+.pos-workflow-step.gate {
+  border-color: #e9caca;
+  background: #fff8f6;
+}
+.pos-workflow-step.gate .pos-step-number { background: #b85b52; }
+.pos-workflow-step.complete {
+  border-color: #cfe5d7;
+  background: #f5fbf7;
+}
+.pos-workflow-step.complete .pos-step-number { background: #2d8058; }
+.pos-workflow-step.active { border-color: #c9d5e7; background: #f8faff; }
+.pos-workflow-step.active .pos-step-number { background: var(--pos-navy); }
+.pos-workflow-step.locked .pos-step-number { background: #64748b; }
+.pos-step-copy { min-width: 0; display: grid; gap: 3px; }
+.pos-step-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: #25344a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+.pos-step-copy p { color: #718096; font-size: 10px; line-height: 1.35; }
+.pos-step-state {
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+.pos-step-state.warning { background: #b85b52; color: #fff; }
+.pos-step-state.success { background: #2d8058; color: #fff; }
+
+.pos-shift-panel {
+  margin-bottom: 13px;
+  padding: 13px 15px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.pos-shift-heading { margin-bottom: 10px; }
+.pos-shift-heading h2 { font-size: 14px; }
+.pos-shift-heading p { font-size: 10px; }
+.pos-shift-controls,
+.pos-cash-movement-controls { gap: 8px; }
+.pos-shift-controls label,
+.pos-cash-movement-controls label { font-size: 9px; }
+.pos-shift-controls input,
+.pos-shift-controls select,
+.pos-cash-movement-controls input,
+.pos-cash-movement-controls select { height: 34px; font-size: 10px; }
+
+.pos-workspace {
+  grid-template-columns: minmax(0, 1.9fr) minmax(350px, 1fr);
+  gap: 13px;
+}
+.pos-catalog-panel,
+.pos-cart-panel {
+  border-radius: 8px;
+  box-shadow: none;
+}
+.pos-catalog-panel { padding: 13px; }
+.pos-cart-panel {
+  position: sticky;
+  top: 14px;
+  max-height: calc(100vh - 28px);
+  padding: 13px;
+}
+.pos-panel-heading { margin-bottom: 11px; }
+.pos-panel-heading h2 { font-size: 14px; }
+.pos-panel-heading p { font-size: 10px; }
+.pos-search-wrap {
+  height: 38px;
+  gap: 8px;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+.pos-search-wrap input { font-size: 11px; }
+.pos-category-list {
+  gap: 6px;
+  padding: 10px 0 11px;
+}
+.pos-category-list button {
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #3d4b5e;
+  font-size: 10px;
+}
+.pos-category-list button.selected {
+  border-color: var(--pos-navy);
+  background: var(--pos-navy);
+  color: #fff;
+}
+.pos-product-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+.pos-product-card {
+  border-radius: 7px;
+  box-shadow: none;
+}
+.pos-product-card:hover { transform: translateY(-1px); }
+.pos-product-info { padding: 10px; }
+.pos-product-meta {
+  min-height: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+.pos-product-category {
+  min-width: 0;
+  color: #64748b;
+  font-size: 8px;
+  letter-spacing: .055em;
+}
+.pos-product-stock {
+  flex: 0 0 auto;
+  padding: 2px 5px;
+  border-radius: 20px;
+  font-size: 8px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.pos-product-stock.in-stock { background: #e9f8ef; color: #218052; }
+.pos-product-stock.out-stock { background: #fff0ef; color: #b54740; }
+.pos-product-info h3 {
+  min-height: 34px;
+  margin: 6px 0 8px;
+  color: #26364d;
+  font-size: 11px;
+  line-height: 1.35;
+}
+.pos-variant-label {
+  gap: 3px;
+  font-size: 8px;
+}
+.pos-variant-label select {
+  height: 29px;
+  border-radius: 5px;
+  font-size: 9px;
+}
+.pos-product-bottom {
+  align-items: center;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f4f7;
+}
+.pos-product-bottom > strong { font-size: 12px; }
+.pos-add-button {
+  min-height: 28px;
+  padding: 0 7px;
+  border-radius: 5px;
+  font-size: 9px;
+}
+.pos-cart-items { max-height: 250px; }
+.pos-cart-item { padding: 9px 0; }
+.pos-cart-item-main strong { font-size: 10px; }
+.pos-cart-item-bottom { margin-top: 7px; }
+.pos-totals { padding: 11px 0; }
+.pos-grand-total strong { font-size: 22px; }
+.pos-payment-section { padding: 11px 0 8px; }
+.pos-payment-row { padding: 8px; border-radius: 6px; }
+.pos-complete-button {
+  min-height: 42px;
+  border-radius: 6px;
+  background: var(--pos-navy);
+  box-shadow: none;
+}
+.pos-complete-button:hover:not(:disabled) { background: var(--pos-navy-2); }
+.pos-secure-note { font-size: 8px; }
+
+@media (max-width: 1120px) {
+  .pos-workspace { grid-template-columns: minmax(0, 1.6fr) minmax(330px, 1fr); }
+  .pos-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 850px) {
+  .pos-workflow-steps { grid-template-columns: 1fr; gap: 7px; }
+  .pos-workflow-step { min-height: 56px; }
+  .pos-workspace { grid-template-columns: 1fr; }
+  .pos-cart-panel { position: static; max-height: none; }
+  .pos-product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .pos-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pos-product-info { padding: 8px; }
+  .pos-product-meta { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .pos-product-info h3 { min-height: 30px; }
+  .pos-product-bottom { align-items: stretch; flex-direction: column; }
+  .pos-add-button { width: 100%; }
+  .pos-shift-controls,
+  .pos-cash-movement-controls { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 390px) {
+  .pos-product-grid { grid-template-columns: 1fr; }
+  .pos-shift-controls,
+  .pos-cash-movement-controls { grid-template-columns: 1fr; }
+}
