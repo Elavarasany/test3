@@ -1,0 +1,201 @@
+/* New Sale visual-only refinement based on Figma frame 2:389.
+   This file changes presentation only; no POS flow, state, permissions or API behavior. */
+.pos-page:has(.pos-workflow-steps) {
+  font-family: "Plus Jakarta Sans", Inter, "Segoe UI", Arial, sans-serif !important;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #202b3a;
+}
+.pos-page:has(.pos-workflow-steps) :is(h1,h2,h3,h4,p,label,button,input,select,small,strong,span) {
+  font-family: inherit;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-panel {
+  padding: 14px 16px !important;
+  border: 1px solid #e3e7ec;
+  border-radius: 8px;
+  background: #fff;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading h2 {
+  font-size: 15px !important;
+  line-height: 1.35;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading p {
+  font-size: 11px !important;
+  line-height: 1.5;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading .pos-eyebrow {
+  font-size: 10px !important;
+  letter-spacing: .08em;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-controls label,
+.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls label {
+  gap: 5px;
+  font-size: 11px !important;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-controls :is(input,select),
+.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls :is(input,select) {
+  min-height: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #dfe4eb;
+  border-radius: 5px;
+  background: #f7f8fa;
+  font-size: 12px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-controls .pos-button,
+.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls .pos-button {
+  min-height: 36px;
+  padding: 0 13px;
+  border-radius: 5px;
+  font-size: 11px !important;
+  font-weight: 700;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-steps {
+  gap: 11px;
+  margin-bottom: 13px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step {
+  min-height: 60px;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 7px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step .pos-step-number {
+  width: 27px;
+  height: 27px;
+  flex-basis: 27px;
+  font-size: 11px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-step-title {
+  gap: 7px;
+  font-size: 11px !important;
+  line-height: 1.4;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-step-copy p {
+  font-size: 10px !important;
+  line-height: 1.45;
+}
+.pos-page:has(.pos-workflow-steps) .pos-step-state {
+  padding: 3px 6px;
+  font-size: 8px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workspace {
+  gap: 13px;
+}
+.pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) {
+  border: 1px solid #e3e7ec;
+  border-radius: 8px;
+  background: #fff;
+}
+.pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) {
+  padding: 14px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-panel-heading {
+  margin-bottom: 12px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-panel-heading h2 {
+  font-size: 15px !important;
+  line-height: 1.4;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-panel-heading p {
+  font-size: 10px !important;
+  line-height: 1.5;
+}
+.pos-page:has(.pos-workflow-steps) .pos-search-wrap {
+  height: 40px;
+  border-radius: 6px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-search-wrap input {
+  font-size: 12px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-category-list {
+  gap: 7px;
+  padding: 11px 0 12px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-category-list button {
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 10px !important;
+  font-weight: 650;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-grid { gap: 10px; }
+.pos-page:has(.pos-workflow-steps) .pos-product-card {
+  border: 1px solid #e6e9ee;
+  border-radius: 7px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-info { padding: 11px; }
+.pos-page:has(.pos-workflow-steps) .pos-product-category,
+.pos-page:has(.pos-workflow-steps) .pos-product-stock {
+  font-size: 9px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-info h3 {
+  min-height: 36px;
+  font-size: 12px !important;
+  line-height: 1.45;
+  font-weight: 700;
+}
+.pos-page:has(.pos-workflow-steps) .pos-variant-label {
+  gap: 5px;
+  font-size: 10px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-variant-label select {
+  min-height: 32px;
+  height: 32px;
+  font-size: 10px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-bottom > strong {
+  font-size: 14px !important;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-add-button {
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 5px;
+  font-size: 10px !important;
+  font-weight: 700;
+}
+.pos-page:has(.pos-workflow-steps) .pos-cart-item-main strong {
+  font-size: 11px !important;
+  line-height: 1.4;
+}
+.pos-page:has(.pos-workflow-steps) .pos-cart-item-main :is(span,small) {
+  font-size: 10px !important;
+  line-height: 1.45;
+}
+.pos-page:has(.pos-workflow-steps) .pos-cart-item-bottom > strong,
+.pos-page:has(.pos-workflow-steps) .pos-totals > div {
+  font-size: 11px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-grand-total strong {
+  font-size: 23px !important;
+  font-weight: 800;
+}
+.pos-page:has(.pos-workflow-steps) .pos-form-section-title {
+  font-size: 10px !important;
+  letter-spacing: .04em;
+}
+.pos-page:has(.pos-workflow-steps) :is(.pos-customer-fields input,.pos-discount-row input,.pos-payment-inputs input,.pos-payment-row-heading select) {
+  min-height: 34px;
+  height: 34px;
+  border-radius: 5px;
+  font-size: 11px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-payment-inputs label {
+  font-size: 10px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-payment-row { padding: 9px; }
+.pos-page:has(.pos-workflow-steps) .pos-complete-button {
+  min-height: 43px;
+  border-radius: 6px;
+  font-size: 12px !important;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-secure-note { font-size: 9px !important; }
+@media (max-width: 850px) {
+  .pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) { padding: 12px; }
+}
