@@ -199,3 +199,341 @@
 @media (max-width: 850px) {
   .pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) { padding: 12px; }
 }
+
+
+/* NMK New Sale — translated from the supplied Aura Retail HTML reference.
+   Scoped to checkout so inventory, reports and history retain their existing UI. */
+.pos-app:has(.pos-workflow-steps) {
+  --pos-navy: #00288e;
+  --pos-navy-2: #1e40af;
+  --pos-ink: #191c1e;
+  --pos-muted: #626b78;
+  --pos-line: #e0e3e5;
+  background: #f7f9fb;
+  color: #191c1e;
+  font-family: "Plus Jakarta Sans", Inter, "Segoe UI", Arial, sans-serif;
+}
+.pos-app:has(.pos-workflow-steps) .pos-topbar {
+  min-height: 64px;
+  padding: 0 20px;
+  background: #fff;
+  color: #191c1e;
+  border-bottom: 1px solid #eceef0;
+  box-shadow: 0 1px 8px rgba(0,0,0,.04);
+}
+.pos-app:has(.pos-workflow-steps) .pos-brand strong { color: #191c1e; font-size: 16px; }
+.pos-app:has(.pos-workflow-steps) .pos-brand strong span { color: #00288e; }
+.pos-app:has(.pos-workflow-steps) .pos-brand small { color: #626b78; }
+.pos-app:has(.pos-workflow-steps) .pos-back-button {
+  color: #00288e;
+  border-color: #e0e3e5;
+  border-radius: 8px;
+}
+.pos-app:has(.pos-workflow-steps) .pos-topbar-right { gap: 14px; }
+.pos-app:has(.pos-workflow-steps) .pos-location-picker { color: #626b78; }
+.pos-app:has(.pos-workflow-steps) .pos-location-picker select {
+  min-height: 34px;
+  color: #191c1e;
+  background: #f2f4f6;
+  border-color: #e0e3e5;
+  border-radius: 7px;
+}
+.pos-app:has(.pos-workflow-steps) .pos-cashier { color: #444653; }
+.pos-app:has(.pos-workflow-steps) .pos-sticky-nav {
+  top: 64px;
+  margin-bottom: 12px;
+  padding: 8px 20px;
+  background: rgba(255,255,255,.97);
+  border-bottom: 1px solid #e6e8ea;
+  backdrop-filter: blur(12px);
+}
+.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner::-webkit-scrollbar { display: none; }
+.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner .pos-tab-button {
+  width: auto;
+  min-width: max-content;
+  min-height: 36px;
+  padding: 0 12px;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #565e74;
+  font-size: 11px;
+  font-weight: 650;
+}
+.pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner .pos-tab-button.active {
+  background: #1e40af;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0,40,142,.14);
+}
+.pos-app:has(.pos-workflow-steps) .pos-page {
+  width: 100%;
+  max-width: 1800px;
+  padding: 10px 18px 32px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-panel {
+  grid-template-columns: minmax(250px, .9fr) minmax(0, 2.1fr);
+  gap: 12px 18px;
+  margin-bottom: 12px;
+  padding: 13px 15px !important;
+  border: 1px solid #e6e8ea;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.025);
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading {
+  align-items: center;
+  padding: 0 10px 0 0;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading h2 {
+  color: #191c1e;
+  font-size: 14px !important;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading p { color: #626b78; font-size: 10px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-shift-heading .pos-eyebrow {
+  color: #00288e;
+  font-size: 9px !important;
+  letter-spacing: .1em;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-status {
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-controls label,
+.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls label {
+  color: #444653;
+  font-size: 10px !important;
+  font-weight: 650;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-controls :is(input,select),
+.pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls :is(input,select) {
+  min-height: 34px;
+  height: 34px;
+  border: 1px solid #c4c5d5;
+  border-radius: 6px;
+  background: #f7f9fb;
+  color: #191c1e;
+  font-size: 11px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-shift-controls .pos-button.primary {
+  background: #00288e;
+  border-color: #00288e;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 9px;
+  margin: 0 0 12px;
+  padding: 9px;
+  border: 1px solid #e6e8ea;
+  border-radius: 9px;
+  background: #fff;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step {
+  min-height: 54px;
+  padding: 8px 10px;
+  border: 1px solid #e0e3e5;
+  border-radius: 7px;
+  background: #f2f4f6;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step.gate {
+  border-color: #f0c8c5;
+  background: #fff1ef;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step.complete {
+  border-color: #b9dfca;
+  background: #eff8f2;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step .pos-step-number {
+  width: 26px;
+  height: 26px;
+  flex-basis: 26px;
+  background: #00288e;
+  font-size: 11px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step.gate .pos-step-number { background: #ba1a1a; }
+.pos-page:has(.pos-workflow-steps) .pos-workflow-step.complete .pos-step-number { background: #18794e; }
+.pos-page:has(.pos-workflow-steps) .pos-step-title {
+  color: #191c1e;
+  font-size: 10px !important;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-step-copy p { color: #626b78; font-size: 9px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-workspace {
+  grid-template-columns: minmax(0,1.85fr) minmax(350px,.95fr);
+  gap: 13px;
+}
+.pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) {
+  padding: 14px;
+  border: 1px solid #e0e3e5;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 2px 7px rgba(25,28,30,.035);
+}
+.pos-page:has(.pos-workflow-steps) .pos-panel-heading h2 {
+  color: #191c1e;
+  font-size: 15px !important;
+  font-weight: 750;
+}
+.pos-page:has(.pos-workflow-steps) .pos-panel-heading p { color: #626b78; font-size: 10px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-search-wrap {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: #f2f4f6;
+}
+.pos-page:has(.pos-workflow-steps) .pos-search-wrap:focus-within {
+  border-color: #00288e;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(0,40,142,.12);
+}
+.pos-page:has(.pos-workflow-steps) .pos-search-wrap input { color: #191c1e; font-size: 11px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-category-list {
+  gap: 6px;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid #f2f4f6;
+}
+.pos-page:has(.pos-workflow-steps) .pos-category-list button {
+  padding: 6px 11px;
+  border: 0;
+  border-radius: 6px;
+  background: #f2f4f6;
+  color: #565e74;
+  font-size: 10px !important;
+  font-weight: 650;
+}
+.pos-page:has(.pos-workflow-steps) .pos-category-list button.selected {
+  background: #00288e;
+  color: #fff;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-grid {
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 10px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-card {
+  border: 1px solid #e6e8ea;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: none;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-card:hover {
+  border-color: #b8c4ff;
+  box-shadow: 0 5px 14px rgba(0,40,142,.07);
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-info { padding: 11px; }
+.pos-page:has(.pos-workflow-steps) .pos-product-category { color: #565e74; font-size: 8px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-product-stock { font-size: 8px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-product-info h3 {
+  min-height: 36px;
+  color: #191c1e;
+  font-size: 11px !important;
+  font-weight: 750;
+  line-height: 1.45;
+}
+.pos-page:has(.pos-workflow-steps) .pos-variant-label { color: #626b78; font-size: 9px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-variant-label select {
+  min-height: 31px;
+  height: 31px;
+  border: 1px solid #e0e3e5;
+  border-radius: 6px;
+  background: #f7f9fb;
+  color: #191c1e;
+  font-size: 9px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-bottom {
+  padding-top: 8px;
+  border-top: 1px solid #f2f4f6;
+}
+.pos-page:has(.pos-workflow-steps) .pos-product-bottom > strong { color: #191c1e; font-size: 13px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-add-button {
+  min-height: 31px;
+  padding: 0 9px;
+  border-radius: 6px;
+  background: #00288e;
+  font-size: 9px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-cart-panel {
+  position: sticky;
+  top: 140px;
+  max-height: calc(100vh - 152px);
+  overflow-y: auto;
+}
+.pos-page:has(.pos-workflow-steps) .pos-cart-panel .pos-panel-heading {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f2f4f6;
+}
+.pos-page:has(.pos-workflow-steps) .pos-cart-items { max-height: 220px; }
+.pos-page:has(.pos-workflow-steps) .pos-cart-item { padding: 9px 0; }
+.pos-page:has(.pos-workflow-steps) .pos-cart-item-main strong { color: #191c1e; font-size: 10px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-cart-item-main :is(span,small) { color: #626b78; font-size: 9px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-quantity-control {
+  border-color: #e0e3e5;
+  border-radius: 6px;
+}
+.pos-page:has(.pos-workflow-steps) .pos-quantity-control button { background: #f2f4f6; color: #00288e; }
+.pos-page:has(.pos-workflow-steps) .pos-cart-item-bottom > strong { color: #191c1e; font-size: 10px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-cart-form,
+.pos-page:has(.pos-workflow-steps) .pos-totals { border-color: #e6e8ea; }
+.pos-page:has(.pos-workflow-steps) .pos-form-section-title { color: #191c1e; font-size: 10px !important; }
+.pos-page:has(.pos-workflow-steps) :is(.pos-customer-fields input,.pos-discount-row input,.pos-payment-inputs input,.pos-payment-row-heading select) {
+  min-height: 33px;
+  height: 33px;
+  border: 1px solid #e0e3e5;
+  border-radius: 6px;
+  background: #f7f9fb;
+  color: #191c1e;
+  font-size: 10px !important;
+}
+.pos-page:has(.pos-workflow-steps) .pos-totals > div { color: #626b78; font-size: 10px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-totals strong { color: #191c1e; }
+.pos-page:has(.pos-workflow-steps) .pos-grand-total strong { color: #00288e; font-size: 22px !important; }
+.pos-page:has(.pos-workflow-steps) .pos-payment-row {
+  border-color: #e6e8ea;
+  border-radius: 7px;
+  background: #f7f9fb;
+}
+.pos-page:has(.pos-workflow-steps) .pos-payment-row-heading select { background: #fff; }
+.pos-page:has(.pos-workflow-steps) .pos-add-split { color: #00288e; }
+.pos-page:has(.pos-workflow-steps) .pos-complete-button {
+  min-height: 44px;
+  border-radius: 7px;
+  background: #00288e;
+  font-size: 11px !important;
+  box-shadow: 0 3px 8px rgba(0,40,142,.14);
+}
+.pos-page:has(.pos-workflow-steps) .pos-complete-button:hover:not(:disabled) { background: #1e40af; }
+.pos-page:has(.pos-workflow-steps) .pos-secure-note { color: #626b78; font-size: 9px !important; }
+
+@media (max-width: 1100px) {
+  .pos-page:has(.pos-workflow-steps) .pos-workspace { grid-template-columns: minmax(0,1.45fr) minmax(320px,1fr); }
+  .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 850px) {
+  .pos-app:has(.pos-workflow-steps) .pos-sticky-nav { top: 64px; }
+  .pos-app:has(.pos-workflow-steps) .pos-sticky-nav-inner { justify-content: flex-start; }
+  .pos-page:has(.pos-workflow-steps) .pos-shift-panel { grid-template-columns: 1fr; }
+  .pos-page:has(.pos-workflow-steps) .pos-workflow-steps { grid-template-columns: 1fr; }
+  .pos-page:has(.pos-workflow-steps) .pos-workspace { grid-template-columns: 1fr; }
+  .pos-page:has(.pos-workflow-steps) .pos-cart-panel { position: static; max-height: none; }
+  .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+}
+@media (max-width: 600px) {
+  .pos-app:has(.pos-workflow-steps) .pos-topbar { padding: 0 12px; }
+  .pos-app:has(.pos-workflow-steps) .pos-cashier { display: none; }
+  .pos-app:has(.pos-workflow-steps) .pos-sticky-nav { padding: 7px 10px; }
+  .pos-page:has(.pos-workflow-steps) .pos-page { padding-left: 10px; padding-right: 10px; }
+  .pos-page:has(.pos-workflow-steps) .pos-shift-controls,
+  .pos-page:has(.pos-workflow-steps) .pos-cash-movement-controls { grid-template-columns: 1fr 1fr; }
+  .pos-page:has(.pos-workflow-steps) .pos-product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .pos-page:has(.pos-workflow-steps) :is(.pos-catalog-panel,.pos-cart-panel) { padding: 11px; }
+}
