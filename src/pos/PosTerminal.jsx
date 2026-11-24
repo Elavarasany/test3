@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./PosTerminal.css";
+import "./PosTerminal.visual.css";
 import { API_BASE_URL } from "../config/api";
 
 const API_BASE = API_BASE_URL;
@@ -3536,37 +3537,11 @@ export default function PosTerminal() {
           </section>
         )}
 
-        {activeTab === "checkout" && (
-          <div className="pos-workflow-steps" aria-label="Checkout workflow">
-          <article className={`pos-workflow-step ${shift?.status === "OPEN" ? "complete" : "gate"}`}>
-            <span className="pos-step-number">{shift?.status === "OPEN" ? "✓" : "1"}</span>
-            <div className="pos-step-copy">
-              <div className="pos-step-title">STEP 1: Cash Register <span className={`pos-step-state ${shift?.status === "OPEN" ? "success" : "warning"}`}>{shift?.status === "OPEN" ? "SHIFT OPEN" : "ACTIVE GATE"}</span></div>
-              <p>{shift?.status === "OPEN" ? "Cashier shift verified and ready" : "Open a cashier shift before completing a sale"}</p>
-            </div>
-          </article>
-          <article className={`pos-workflow-step ${shift?.status !== "OPEN" ? "locked" : cart.length ? "complete" : "active"}`}>
-            <span className="pos-step-number">2</span>
-            <div className="pos-step-copy">
-              <div className="pos-step-title">STEP 2: Product Catalogue</div>
-              <p>Select optical frames, lenses and variants</p>
-            </div>
-          </article>
-          <article className={`pos-workflow-step ${shift?.status !== "OPEN" || !cart.length ? "locked" : "active"}`}>
-            <span className="pos-step-number">3</span>
-            <div className="pos-step-copy">
-              <div className="pos-step-title">STEP 3: Current Bill &amp; Invoice</div>
-              <p>Collect payment, complete sale and print receipt</p>
-            </div>
-          </article>
-          </div>
-        )}
-
         {activeTab === "checkout" ? (
           <div className="pos-workspace">
             <section className="pos-catalog-panel">
               <div className="pos-panel-heading">
-                <div><h2>Product catalogue</h2><p>{catalog.length} products available at this store</p></div>
+                <div><h2>Product catalogue</h2><p>{filteredProducts.length} products available at this store</p></div>
                 <button type="button" className="pos-icon-button" onClick={loadCatalog} disabled={catalogLoading} aria-label="Refresh catalogue"><RefreshCw size={17} className={catalogLoading ? "pos-spin" : ""} /></button>
               </div>
               <div className="pos-search-wrap"><Search size={18} /><input ref={searchRef} value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(event) => {
@@ -3581,6 +3556,10 @@ export default function PosTerminal() {
                 }} placeholder="Search product, SKU or barcode…" aria-label="Search products or scan barcode" /><ScanLine size={17} className="pos-search-hint" /></div>
               <div className="pos-category-list">
                 {categories.map((item) => <button key={item} type="button" className={category === item ? "selected" : ""} onClick={() => setCategory(item)}>{item}</button>)}
+              </div>
+              <div className="pos-stock-policy">
+                <span><Package size={14} /> Stock is reserved on checkout and deducted only when the invoice is generated, not when an item is added to the bill.</span>
+                <small>Prices include applicable GST</small>
               </div>
               {catalogLoading || locationsLoading ? <div className="pos-empty-state"><RefreshCw className="pos-spin" /><span>Loading store catalogue…</span></div>
                 : !locationId ? <div className="pos-empty-state"><Store /><strong>Store location required</strong><span>Configure an active inventory location to start selling.</span></div>
