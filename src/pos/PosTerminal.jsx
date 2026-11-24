@@ -3457,7 +3457,8 @@ export default function PosTerminal() {
 
         {locationStockCountLocked && <div className="pos-alert error" role="alert"><AlertCircle size={18} /><span>Physical stock count in progress. Sales and stock movements are temporarily frozen at this location.</span></div>}
 
-        <div className="pos-workflow-steps" aria-label="Checkout workflow">
+        {activeTab === "checkout" && (
+          <div className="pos-workflow-steps" aria-label="Checkout workflow">
           <article className={`pos-workflow-step ${shift?.status === "OPEN" ? "complete" : "gate"}`}>
             <span className="pos-step-number">{shift?.status === "OPEN" ? "✓" : "1"}</span>
             <div className="pos-step-copy">
@@ -3479,7 +3480,8 @@ export default function PosTerminal() {
               <p>Collect payment, complete sale and print receipt</p>
             </div>
           </article>
-        </div>
+          </div>
+        )}
 
         <section className="pos-shift-panel">
           <div className="pos-shift-heading">
