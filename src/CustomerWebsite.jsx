@@ -51,37 +51,31 @@ const CATEGORIES = [
     name: "Eyeglasses",
     desc: "Frames for every style",
     imageKey: "CATEGORY_EYEGLASSES",
-    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700",
   },
   {
     name: "Sunglasses",
     desc: "Style meets protection",
     imageKey: "CATEGORY_SUNGLASSES",
-    image: "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=700",
   },
   {
     name: "Power Sunglasses",
     desc: "Sunglasses with your prescription",
     imageKey: "CATEGORY_POWER_SUNGLASSES",
-    image: "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=700",
   },
   {
     name: "Computer Glasses",
     desc: "Made for screen time",
     imageKey: "CATEGORY_COMPUTER_GLASSES",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=700",
   },
   {
     name: "Contact Lenses",
     desc: "Comfort in every glance",
     imageKey: "CATEGORY_CONTACT_LENSES",
-    image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=700",
   },
   {
     name: "Accessories",
     desc: "Cases, cleaning kits and more",
     imageKey: "CATEGORY_ACCESSORIES",
-    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700",
   },
 ];
 
@@ -3484,7 +3478,17 @@ const cartTotal = cart.reduce(
           <div className="category-grid">
             {CATEGORIES.map((item) => (
               <a key={item.name} className="category-card" href="#products" onClick={() => selectCategoryFromCard(item.name)}>
-                <FallbackImage src={websiteImages[item.imageKey] || item.image} fallback={item.image} alt="" loading="lazy" />
+                {websiteImages[item.imageKey] && (
+                  <img
+                    src={websiteImages[item.imageKey]}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.style.visibility = "hidden";
+                    }}
+                  />
+                )}
 
                 <div className="category-info">
                   <div>
