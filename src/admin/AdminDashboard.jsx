@@ -5255,6 +5255,8 @@ const CATEGORY_IMAGE_SLOTS = [
 ];
 
 function CategoryImagesEditor({ api, images, loading, onReload, onNotice }) {
+  const confirm = useConfirm();
+  const [removingKey, setRemovingKey] = useState("");
   // Only one image can be edited at a time:
   // { imageKey, mode: "url" | "file", url, file, previewUrl, error, saving }
   const [edit, setEdit] = useState(null);
@@ -5291,6 +5293,35 @@ function CategoryImagesEditor({ api, images, loading, onReload, onNotice }) {
     if (problem) return updateEdit({ error: problem });
 
     updateEdit({ file, previewUrl: URL.createObjectURL(file), error: "" });
+  };
+
+  const removeImage = async (image) => {
+    const ok = await confirm({
+      title: "Remove category image",
+      message: `Remove the uploaded image for ${image.title}? The category image area will be left blank on the website.`,
+      confirmLabel: "Remove image",
+      danger: true,
+    });
+    if (!ok) return;
+
+    setRemovingKey(image.imageKey);
+    try {
+      const done = await saveWebsiteImage(
+        api,
+        image.imageKey,
+        image.title,
+        "",
+        `Failed to remove ${image.title} image`
+      );
+      if (done) {
+        onNotice(`${image.title} image removed. The website image area is now blank.`);
+        await onReload();
+      }
+    } catch (err) {
+      onNotice(err.message || `Failed to remove ${image.title} image.`);
+    } finally {
+      setRemovingKey("");
+    }
   };
 
   const save = async (image) => {
@@ -5341,7 +5372,7 @@ function CategoryImagesEditor({ api, images, loading, onReload, onNotice }) {
               <div
                 className="wi-image"
                 role="img"
-                aria-label={`${image.title}: no custom image, the website default is shown`}
+                aria-label={`${image.title}: no uploaded image`}
                 style={{
                   display: "grid",
                   placeItems: "center",
@@ -5352,17 +5383,30 @@ function CategoryImagesEditor({ api, images, loading, onReload, onNotice }) {
                   background: "#f3f4f6",
                 }}
               >
-                No custom image yet. The website default is shown.
+                No image uploaded. This area will stay blank on the website.
               </div>
             )}
 
             <h3 className="wi-title">{image.title}</h3>
 
             {!isEditing && (
-              <button type="button" className="wi-edit-button" onClick={() => openEditor(image)} disabled={Boolean(edit)}>
-                <Pencil size={16} aria-hidden="true" />
-                Edit
-              </button>
+              <div className="wi-category-image-actions">
+                <button type="button" className="wi-edit-button" onClick={() => openEditor(image)} disabled={Boolean(edit) || Boolean(removingKey)}>
+                  <Pencil size={16} aria-hidden="true" />
+                  Edit
+                </button>
+                {image.imageUrl && (
+                  <button
+                    type="button"
+                    className="wi-edit-button wi-remove-button"
+                    onClick={() => removeImage(image)}
+                    disabled={Boolean(edit) || Boolean(removingKey)}
+                  >
+                    <Trash2 size={16} aria-hidden="true" />
+                    {removingKey === image.imageKey ? "Removing..." : "Remove"}
+                  </button>
+                )}
+              </div>
             )}
 
             {isEditing && (
