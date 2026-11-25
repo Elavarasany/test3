@@ -1629,3 +1629,63 @@
   .pos-app .pos-page .pos-low-stock-list > div { flex-direction: column; gap: 6px; }
   .pos-app .pos-page .pos-webhook-summary { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Inventory module navigation, matching the supplied two-level POS reference. */
+.pos-app .pos-inventory-subnav {
+  position: sticky;
+  top: 136px;
+  z-index: 45;
+  width: calc(100% + 2 * clamp(16px, 3vw, 42px));
+  margin: -2px calc(-1 * clamp(16px, 3vw, 42px)) 2px;
+  padding: 7px clamp(16px, 3vw, 42px);
+  border-top: 1px solid #e6ebf1;
+  border-bottom: 1px solid #dfe5ed;
+  background: rgba(248, 250, 252, .97);
+  backdrop-filter: blur(12px);
+}
+.pos-app .pos-inventory-subnav-inner {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+.pos-app .pos-inventory-subnav-inner::-webkit-scrollbar { display: none; }
+.pos-app .pos-inventory-subnav-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #596a80;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.pos-app .pos-inventory-subnav-link svg { color: #8794a5; }
+.pos-app .pos-inventory-subnav-link:hover {
+  border-color: #e1e7ef;
+  background: #fff;
+  color: #1d4ed8;
+}
+.pos-app .pos-inventory-subnav-link.active {
+  border-color: #dbe5f5;
+  background: #fff;
+  color: #1d4ed8;
+  box-shadow: 0 1px 3px rgba(15,23,42,.06);
+}
+.pos-app .pos-inventory-subnav-link.active svg { color: #2563eb; }
+.pos-app .pos-inventory-workspace [id^="inventory-"] { scroll-margin-top: 190px; }
+
+@media (max-width: 760px) {
+  .pos-app .pos-inventory-subnav { top: 126px; }
+  .pos-app .pos-inventory-subnav-link { min-height: 36px; padding: 0 10px; }
+}
