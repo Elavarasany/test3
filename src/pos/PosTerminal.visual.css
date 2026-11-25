@@ -1148,6 +1148,7 @@
   .pos-cart-panel.is-expanded .pos-customer-fields,
   .pos-cart-panel.is-expanded .pos-payment-inputs { grid-template-columns: minmax(0, 1fr); }
   .pos-cart-panel.is-expanded > .pos-complete-button { width: 100%; }
+  .pos-app .pos-inventory-subnav { margin-top: -21px; }
 }
 @media (max-height: 780px) and (min-width: 761px) {
   .pos-app .pos-cart-panel.is-expanded {
@@ -1637,7 +1638,7 @@
   top: 136px;
   z-index: 45;
   width: calc(100% + 2 * clamp(16px, 3vw, 42px));
-  margin: -18px calc(-1 * clamp(16px, 3vw, 42px)) 2px;
+  margin: -30px calc(-1 * clamp(16px, 3vw, 42px)) 16px;
   padding: 7px clamp(16px, 3vw, 42px);
   border-top: 1px solid #e6ebf1;
   border-bottom: 1px solid #dfe5ed;
