@@ -1625,10 +1625,6 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
 
   return (
     <section className="pos-inventory-workspace">
-      <div className="pos-inventory-intro">
-        <div><span className="pos-eyebrow">CATALOGUE & STOCK CONTROL</span><h2>Inventory setup</h2><p>Create sellable variants and receive physical stock into the selected store location.</p></div>
-        <button type="button" className="pos-button secondary compact" onClick={() => { loadProducts(); onRefreshCatalog(); }} disabled={productsLoading || variantsLoading}><RefreshCw size={15} /> Refresh inventory</button>
-      </div>
       <nav className="pos-inventory-subnav" aria-label="Inventory sections">
         <div className="pos-inventory-subnav-inner">
           {[
@@ -1653,6 +1649,11 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
           })}
         </div>
       </nav>
+      <div className="pos-inventory-intro">
+        <div><span className="pos-eyebrow">CATALOGUE & STOCK CONTROL</span><h2>Inventory setup</h2><p>Create sellable variants and receive physical stock into the selected store location.</p></div>
+        <button type="button" className="pos-button secondary compact" onClick={() => { loadProducts(); onRefreshCatalog(); }} disabled={productsLoading || variantsLoading}><RefreshCw size={15} /> Refresh inventory</button>
+      </div>
+
       <section id="inventory-stock-count" className="pos-inventory-card pos-stock-count-card">
         <div className="pos-inventory-card-heading"><ClipboardCheck size={18} /><div><h3>Physical stock count</h3><p>Freeze stock movements, count every sellable variant and post verified variances to the stock ledger.</p></div></div>
         {stockCountLoading ? <div className="pos-empty-state"><RefreshCw className="pos-spin" /><span>Checking active stock count…</span></div>
