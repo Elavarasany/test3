@@ -146,7 +146,7 @@ const EMPTY_BOOKING = { name: "", phone: "", email: "", date: "", slot: "" };
 
 const FALLBACK_IMAGES = {
   product: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=600",
-  hero: "https://i.pinimg.com/1200x/8a/6e/64/8a6e64cb9c1b4ddefda6384f542a6695.jpg",
+  hero: "",
   store: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1000",
 };
 
@@ -3450,12 +3450,16 @@ const cartTotal = cart.reduce(
           </div>
 
           <div className="hero-image">
-            <FallbackImage
-              src={websiteImages.HERO || FALLBACK_IMAGES.hero}
-              fallback={FALLBACK_IMAGES.hero}
-              alt="Premium eyewear collection"
-              decoding="async"
-            />
+            {websiteImages.HERO && (
+              <img
+                src={websiteImages.HERO}
+                alt="Premium eyewear collection"
+                decoding="async"
+                onError={(event) => {
+                  event.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            )}
           </div>
 
           <MarketingBanners banners={marketingBanners} placement="HOME_HERO" />
