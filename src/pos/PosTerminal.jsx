@@ -486,6 +486,7 @@ function ProcurementHistory({ purchaseOrderId }) {
 }
 
 function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNotice, onError }) {
+  const [activeInventorySection, setActiveInventorySection] = useState("inventory-stock-count");
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState("");
@@ -1611,7 +1612,31 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
         <div><span className="pos-eyebrow">CATALOGUE & STOCK CONTROL</span><h2>Inventory setup</h2><p>Create sellable variants and receive physical stock into the selected store location.</p></div>
         <button type="button" className="pos-button secondary compact" onClick={() => { loadProducts(); onRefreshCatalog(); }} disabled={productsLoading || variantsLoading}><RefreshCw size={15} /> Refresh inventory</button>
       </div>
-      <section className="pos-inventory-card pos-stock-count-card">
+      <nav className="pos-inventory-subnav" aria-label="Inventory sections">
+        <div className="pos-inventory-subnav-inner">
+          {[
+            { id: "inventory-stock-count", label: "Physical stock count", icon: ClipboardCheck },
+            { id: "inventory-procurement", label: "Supplier procurement", icon: Truck },
+            ...(staffRole === "ADMIN" ? [{ id: "inventory-payables", label: "Accounts payable", icon: CreditCard }] : []),
+            { id: "inventory-variants", label: "Create variant & Receive", icon: Plus },
+            { id: "inventory-adjustment", label: "Stock adjustment", icon: FileText },
+            { id: "inventory-current-stock", label: "Current stock by variant", icon: Package },
+            { id: "inventory-movements", label: "Stock movement history", icon: History },
+          ].map((item) => {
+            const Icon = item.icon;
+            return <button key={item.id} type="button"
+              className={`pos-inventory-subnav-link ${activeInventorySection === item.id ? "active" : ""}`}
+              aria-current={activeInventorySection === item.id ? "location" : undefined}
+              onClick={() => {
+                setActiveInventorySection(item.id);
+                document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}>
+              <Icon size={14} /> <span>{item.label}</span>
+            </button>;
+          })}
+        </div>
+      </nav>
+      <section id="inventory-stock-count" className="pos-inventory-card pos-stock-count-card">
         <div className="pos-inventory-card-heading"><ClipboardCheck size={18} /><div><h3>Physical stock count</h3><p>Freeze stock movements, count every sellable variant and post verified variances to the stock ledger.</p></div></div>
         {stockCountLoading ? <div className="pos-empty-state"><RefreshCw className="pos-spin" /><span>Checking active stock count…</span></div>
           : !stockCount ? (
@@ -1673,7 +1698,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
           )}
       </section>
 
-      <section className="pos-inventory-card pos-procurement-card">
+      <section id="inventory-procurement" className="pos-inventory-card pos-procurement-card">
         <div className="pos-inventory-card-heading"><Truck size={18} /><div><h3>Supplier procurement</h3><p>Create purchase orders, receive partial deliveries and return goods to suppliers with stock ledger references.</p></div>
           <button type="button" className="pos-button secondary compact" onClick={loadProcurement} disabled={procurementLoading}><RefreshCw size={14} /> Refresh</button>
         </div>
@@ -1716,7 +1741,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
           </form>
         </div>
 
-        {staffRole === "ADMIN" && <section className="pos-supplier-accounting">
+        {staffRole === "ADMIN" && <section id="inventory-payables" className="pos-supplier-accounting">
           <div className="pos-panel-heading"><div><h4>Supplier accounts payable</h4><p>Post supplier invoices, record authorized payments and inspect receipt-level landed-cost allocations.</p></div>
             <button type="button" className="pos-button secondary compact" onClick={() => { loadSupplierBills(); loadSupplierPayablesAging(); }} disabled={supplierBillsLoading || supplierPayablesAgingLoading}><RefreshCw size={14} /> Refresh bills</button>
           </div>
@@ -1879,7 +1904,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
         </div>
       </section>
 
-      <div className="pos-inventory-grid">
+      <div id="inventory-variants" className="pos-inventory-grid">
         <section className="pos-inventory-card">
           <div className="pos-inventory-card-heading"><Package size={18} /><div><h3>Create product variant</h3><p>Each sellable colour/size combination needs its own SKU.</p></div></div>
           <form onSubmit={createVariant} className="pos-inventory-form">
@@ -1932,7 +1957,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
           </form>
         </section>
 
-        <section className="pos-inventory-card">
+        <section id="inventory-adjustment" className="pos-inventory-card">
           <div className="pos-inventory-card-heading"><Package size={18} /><div><h3>Stock adjustment</h3><p>Correct a physical count, damage or verified stock discrepancy. Every change is recorded.</p></div></div>
           <form onSubmit={adjustStock} className="pos-inventory-form">
             <label>Product
@@ -2035,7 +2060,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
         </section>
       </div>}
 
-      <section className="pos-inventory-card pos-stock-card">
+      <section id="inventory-current-stock" className="pos-inventory-card pos-stock-card">
         <div className="pos-inventory-card-heading"><Package size={18} /><div><h3>Current stock by variant</h3><p>{selectedProduct?.name || "Select a product"} · {stockRows.length} active variants at this location</p></div></div>
         <div className="pos-low-stock-alerts">
           <div className="pos-low-stock-heading"><strong>Low stock alerts</strong><span>{lowStockLoading ? "Refreshing…" : `${lowStockAlerts.length} variants at or below reorder level`}</span></div>
@@ -2050,7 +2075,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
           : stockRows.length === 0 ? <div className="pos-empty-state"><Package /><strong>No stockable variants yet</strong><span>Create a variant and receive stock to make this product available in POS.</span></div>
           : <div className="pos-history-table-wrap"><table className="pos-history-table"><thead><tr><th>Variant</th><th>SKU</th><th>On hand</th><th>Reserved</th><th>Available</th><th>Reorder level</th><th>Price</th></tr></thead><tbody>{stockRows.map((variant) => <tr key={variant.variantId}><td><strong>{variant.variantName}</strong></td><td>{variant.sku}</td><td>{variant.onHandQuantity}</td><td>{variant.reservedQuantity}</td><td><strong>{variant.availableQuantity}</strong></td><td><div className="pos-reorder-control"><input type="number" min="0" max="1000000" step="1" value={reorderDrafts[variant.variantId] ?? variant.reorderLevel ?? 0} onChange={(event) => setReorderDrafts((current) => ({ ...current, [variant.variantId]: event.target.value }))} aria-label={`Reorder level for ${variant.sku}`} /><button type="button" className="pos-button secondary compact" onClick={() => updateReorderLevel(variant.variantId, variant.reorderLevel ?? 0)} disabled={reorderDrafts[variant.variantId] == null}>Save</button></div></td><td>{money(variant.sellingPrice)}</td></tr>)}</tbody></table></div>}
       </section>
-      <section className="pos-inventory-card pos-stock-card">
+      <section id="inventory-movements" className="pos-inventory-card pos-stock-card">
         <div className="pos-inventory-card-heading">
           <ClipboardCheck size={18} />
           <div><h3>Stock movement history</h3><p>Append-only audit ledger for receipts, sales, reservations, returns and adjustments.</p></div>
