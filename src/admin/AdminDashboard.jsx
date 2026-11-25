@@ -5087,7 +5087,7 @@ return (
         {loading ? (
           <div className="admin-empty">Loading banners...</div>
         ) : banners.length === 0 ? (
-          <div className="admin-empty">No marketing banners added yet.</div>
+          <div className="admin-empty marketing-empty-state marketing-banner-empty">No marketing banners added yet.</div>
         ) : (
           <div className="admin-table-scroll">
             <table className="admin-table marketing-banner-table">
@@ -5199,7 +5199,7 @@ return (
             </p>
           </div>
         ) : (
-          <div className="admin-empty">
+          <div className="admin-empty marketing-empty-state marketing-offer-empty">
             No promotional offer configured.
           </div>
         )}
