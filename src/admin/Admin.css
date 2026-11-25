@@ -4586,3 +4586,36 @@
     height: 205px;
   }
 }
+
+
+/* Marketing empty states — centered and evenly spaced */
+.marketing-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 190px;
+  margin: 0;
+  padding: 32px 24px;
+  color: var(--admin-muted);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.marketing-banner-empty {
+  min-height: 220px;
+}
+
+.marketing-offer-empty {
+  min-height: 170px;
+}
+
+@media (max-width: 650px) {
+  .marketing-empty-state {
+    min-height: 150px;
+    padding: 26px 16px;
+    font-size: 13px;
+  }
+}
