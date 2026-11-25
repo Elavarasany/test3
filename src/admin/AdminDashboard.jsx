@@ -5256,231 +5256,283 @@ const CATEGORY_IMAGE_SLOTS = [
 
 function CategoryImagesEditor({ api, images, loading, onReload, onNotice }) {
   const confirm = useConfirm();
-  const [removingKey, setRemovingKey] = useState("");
-  // Only one image can be edited at a time:
-  // { imageKey, mode: "url" | "file", url, file, previewUrl, error, saving }
-  const [edit, setEdit] = useState(null);
-  const previewUrl = edit?.previewUrl;
+  const [activeEditor, setActiveEditor] = useState(null);
+  const [busyKey, setBusyKey] = useState("");
+  const [formError, setFormError] = useState("");
+  const [source, setSource] = useState("file");
+  const [imageUrl, setImageUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
-  // Every category is listed in store order, including ones without a custom image yet
-  const slots = CATEGORY_IMAGE_SLOTS.map(
-    (slot) => images.find((image) => image.imageKey === slot.imageKey) ?? { ...slot, imageUrl: "" }
-  );
+  const categories = CATEGORY_IMAGE_SLOTS.map((slot) => {
+    const saved = images.find((item) => item.imageKey === slot.imageKey);
+    return { ...slot, imageUrl: saved?.imageUrl || "" };
+  });
 
-  // Release the object URL when it is replaced, the editor closes, or the page unmounts
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
 
-  const openEditor = (image) =>
-    setEdit({ imageKey: image.imageKey, mode: "url", url: "", file: null, previewUrl: "", error: "", saving: false });
+  const resetEditor = () => {
+    setActiveEditor(null);
+    setFormError("");
+    setImageUrl("");
+    setSelectedFile(null);
+    setPreviewUrl("");
+    setSource("file");
+  };
 
-  const closeEditor = () => setEdit(null);
+  const startEditing = (category) => {
+    setActiveEditor(category.imageKey);
+    setFormError("");
+    setImageUrl(category.imageUrl || "");
+    setSelectedFile(null);
+    setPreviewUrl("");
+    setSource("file");
+  };
 
-  // Ignores updates after the editor has closed
-  const updateEdit = (changes) => setEdit((prev) => (prev ? { ...prev, ...changes } : prev));
-
-  const switchMode = (mode) => updateEdit({ mode, error: "", file: null, previewUrl: "" });
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
+  const handleFileSelect = (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
     if (!file) return;
 
     const problem = getImageFileError(file);
-    if (problem) return updateEdit({ error: problem });
+    if (problem) {
+      setFormError(problem);
+      return;
+    }
 
-    updateEdit({ file, previewUrl: URL.createObjectURL(file), error: "" });
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setFormError("");
   };
 
-  const removeImage = async (image) => {
-    const ok = await confirm({
-      title: "Remove category image",
-      message: `Remove the uploaded image for ${image.title}? The category image area will be left blank on the website.`,
-      confirmLabel: "Remove image",
-      danger: true,
-    });
-    if (!ok) return;
+  const saveCategoryImage = async (category) => {
+    if (busyKey) return;
 
-    setRemovingKey(image.imageKey);
+    setFormError("");
+    let finalUrl = "";
+
+    if (source === "file") {
+      if (!selectedFile) {
+        setFormError("Choose an image file before saving.");
+        return;
+      }
+    } else {
+      finalUrl = imageUrl.trim();
+      if (!finalUrl) {
+        setFormError("Enter an image URL before saving.");
+        return;
+      }
+      if (!isValidHttpUrl(finalUrl)) {
+        setFormError("Enter a valid URL starting with http:// or https://.");
+        return;
+      }
+    }
+
+    setBusyKey(category.imageKey);
     try {
-      const done = await saveWebsiteImage(
+      if (source === "file") {
+        finalUrl = await uploadToCloudinary(selectedFile, "nmk-website");
+      }
+
+      const saved = await saveWebsiteImage(
         api,
-        image.imageKey,
-        image.title,
-        "",
-        `Failed to remove ${image.title} image`
+        category.imageKey,
+        category.title,
+        finalUrl,
+        `Could not save the ${category.title} image.`
       );
-      if (done) {
-        onNotice(`${image.title} image removed. The website image area is now blank.`);
+
+      if (saved) {
+        resetEditor();
+        onNotice(`${category.title} image saved successfully.`);
         await onReload();
       }
-    } catch (err) {
-      onNotice(err.message || `Failed to remove ${image.title} image.`);
+    } catch (error) {
+      setFormError(error.message || `Could not save the ${category.title} image.`);
     } finally {
-      setRemovingKey("");
+      setBusyKey("");
     }
   };
 
-  const save = async (image) => {
-    const current = edit;
-    if (!current) return;
+  const removeCategoryImage = async (category) => {
+    if (!category.imageUrl || busyKey) return;
 
-    updateEdit({ saving: true, error: "" });
+    const approved = await confirm({
+      title: "Remove category image?",
+      message: `The ${category.title} image will be removed from the customer website. This category section will remain, but its image area will be blank.`,
+      confirmLabel: "Remove image",
+      danger: true,
+    });
+    if (!approved) return;
 
+    setBusyKey(category.imageKey);
     try {
-      let imageUrl;
+      const saved = await saveWebsiteImage(
+        api,
+        category.imageKey,
+        category.title,
+        "",
+        `Could not remove the ${category.title} image.`
+      );
 
-      if (current.mode === "file") {
-        if (!current.file) throw new Error("Please choose an image file.");
-        imageUrl = await uploadToCloudinary(current.file, "nmk-website");
-      } else {
-        imageUrl = current.url.trim();
-        if (!imageUrl) throw new Error("Please enter an image URL.");
-        if (!isValidHttpUrl(imageUrl)) throw new Error("Please enter a valid image URL.");
+      if (saved) {
+        if (activeEditor === category.imageKey) resetEditor();
+        onNotice(`${category.title} image removed.`);
+        await onReload();
       }
-
-      const done = await saveWebsiteImage(api, image.imageKey, image.title, imageUrl, "Failed to save category image");
-
-      if (!done) return updateEdit({ saving: false });
-
-      closeEditor();
-      onNotice(`${image.title} image updated.`);
-      await onReload();
-    } catch (err) {
-      updateEdit({ saving: false, error: err.message });
+    } catch (error) {
+      onNotice(error.message || `Could not remove the ${category.title} image.`);
+    } finally {
+      setBusyKey("");
     }
   };
 
   if (loading && images.length === 0) {
-    return <p className="wi-message">Loading category images...</p>;
+    return <div className="category-image-state">Loading category images…</div>;
   }
 
   return (
-    <div className="wi-grid">
-      {slots.map((image) => {
-        const isEditing = edit?.imageKey === image.imageKey;
-        const previewSrc = isEditing ? getPreviewSrc(edit, image.imageUrl) : image.imageUrl;
+    <div className="category-image-grid">
+      {categories.map((category) => {
+        const editing = activeEditor === category.imageKey;
+        const isBusy = busyKey === category.imageKey;
+        const shownImage = editing && previewUrl ? previewUrl : category.imageUrl;
 
         return (
-          <div className="wi-card" key={image.id ?? image.imageKey}>
-            {previewSrc ? (
-              <img className="wi-image" src={previewSrc} alt={`${image.title} category`} />
-            ) : (
-              <div
-                className="wi-image"
-                role="img"
-                aria-label={`${image.title}: no uploaded image`}
-                style={{
-                  display: "grid",
-                  placeItems: "center",
-                  padding: "12px",
-                  textAlign: "center",
-                  fontSize: "13px",
-                  color: "#6b7280",
-                  background: "#f3f4f6",
-                }}
-              >
-                No image uploaded. This area will stay blank on the website.
-              </div>
-            )}
-
-            <h3 className="wi-title">{image.title}</h3>
-
-            {!isEditing && (
-              <div className="wi-category-image-actions">
-                <button type="button" className="wi-edit-button" onClick={() => openEditor(image)} disabled={Boolean(edit) || Boolean(removingKey)}>
-                  <Pencil size={16} aria-hidden="true" />
-                  Edit
-                </button>
-                {image.imageUrl && (
-                  <button
-                    type="button"
-                    className="wi-edit-button wi-remove-button"
-                    onClick={() => removeImage(image)}
-                    disabled={Boolean(edit) || Boolean(removingKey)}
-                  >
-                    <Trash2 size={16} aria-hidden="true" />
-                    {removingKey === image.imageKey ? "Removing..." : "Remove"}
-                  </button>
-                )}
-              </div>
-            )}
-
-            {isEditing && (
-              <div className="wi-edit-panel">
-                <div className="wi-edit-header">
-                  <span>Edit image</span>
-                  <button
-                    type="button"
-                    className="wi-close"
-                    onClick={closeEditor}
-                    disabled={edit.saving}
-                    aria-label="Close editor"
-                    title="Close"
-                  >
-                    <X size={16} aria-hidden="true" />
-                  </button>
+          <article className="category-image-card" key={category.imageKey}>
+            <div className="category-image-preview">
+              {shownImage ? (
+                <img src={shownImage} alt={`${category.title} category`} />
+              ) : (
+                <div className="category-image-empty">
+                  <span>No image uploaded</span>
+                  <small>The customer website will show this area without an image.</small>
                 </div>
+              )}
+              <span className={category.imageUrl ? "category-image-status is-uploaded" : "category-image-status"}>
+                {category.imageUrl ? "Image uploaded" : "No image"}
+              </span>
+            </div>
 
-                <div className="wi-tabs" role="group" aria-label="Image source">
-                  {WEBSITE_IMAGE_MODES.map((tab) => (
+            <div className="category-image-card-content">
+              <div className="category-image-card-heading">
+                <h4>{category.title}</h4>
+                <span>{category.imageUrl ? "Custom image" : "Empty slot"}</span>
+              </div>
+
+              {!editing ? (
+                <div className="category-image-buttons">
+                  <button
+                    type="button"
+                    className="category-image-edit"
+                    onClick={() => startEditing(category)}
+                    disabled={Boolean(busyKey) || Boolean(activeEditor)}
+                  >
+                    <Pencil size={15} aria-hidden="true" />
+                    {category.imageUrl ? "Change image" : "Add image"}
+                  </button>
+                  {category.imageUrl && (
                     <button
-                      key={tab.mode}
                       type="button"
-                      className={`wi-tab ${edit.mode === tab.mode ? "active" : ""}`}
-                      onClick={() => switchMode(tab.mode)}
-                      disabled={edit.saving}
-                      aria-pressed={edit.mode === tab.mode}
+                      className="category-image-remove"
+                      onClick={() => removeCategoryImage(category)}
+                      disabled={Boolean(busyKey) || Boolean(activeEditor)}
                     >
-                      {tab.label}
+                      <Trash2 size={15} aria-hidden="true" />
+                      {isBusy ? "Removing…" : "Remove"}
                     </button>
-                  ))}
+                  )}
                 </div>
-
-                {edit.mode === "url" ? (
-                  <input
-                    className="wi-input"
-                    type="url"
-                    aria-label="Image URL"
-                    placeholder="https://example.com/image.jpg"
-                    value={edit.url}
-                    onChange={(e) => updateEdit({ url: e.target.value, error: "" })}
-                    disabled={edit.saving}
-                  />
-                ) : (
-                  <div className="wi-file-row">
-                    <input
-                      type="file"
-                      aria-label="Image file"
-                      accept={IMAGE_ACCEPT}
-                      onChange={handleFileChange}
-                      disabled={edit.saving}
-                    />
-                    {edit.file && <small>{edit.file.name}</small>}
+              ) : (
+                <div className="category-image-editor">
+                  <div className="category-image-editor-heading">
+                    <strong>{category.imageUrl ? "Replace category image" : "Add category image"}</strong>
+                    <button
+                      type="button"
+                      className="category-image-close"
+                      onClick={resetEditor}
+                      disabled={Boolean(busyKey)}
+                      aria-label="Close editor"
+                    >
+                      <X size={16} />
+                    </button>
                   </div>
-                )}
 
-                {edit.error && (
-                  <p className="wi-error" role="alert">
-                    {edit.error}
-                  </p>
-                )}
+                  <div className="category-image-source-switch">
+                    <button
+                      type="button"
+                      className={source === "file" ? "is-active" : ""}
+                      onClick={() => {
+                        setSource("file");
+                        setFormError("");
+                      }}
+                      disabled={Boolean(busyKey)}
+                    >
+                      Upload file
+                    </button>
+                    <button
+                      type="button"
+                      className={source === "url" ? "is-active" : ""}
+                      onClick={() => {
+                        setSource("url");
+                        setFormError("");
+                      }}
+                      disabled={Boolean(busyKey)}
+                    >
+                      Paste image URL
+                    </button>
+                  </div>
 
-                <div className="wi-actions">
-                  <button type="button" className="wi-cancel" onClick={closeEditor} disabled={edit.saving}>
-                    Cancel
-                  </button>
+                  {source === "file" ? (
+                    <div className="category-image-file-field">
+                      <input
+                        type="file"
+                        accept={IMAGE_ACCEPT}
+                        onChange={handleFileSelect}
+                        disabled={Boolean(busyKey)}
+                        aria-label={`Choose ${category.title} image`}
+                      />
+                      <small>JPG, PNG or WEBP · Maximum 5 MB</small>
+                      {selectedFile && <small className="category-image-file-name">{selectedFile.name}</small>}
+                    </div>
+                  ) : (
+                    <input
+                      className="category-image-url-field"
+                      type="url"
+                      value={imageUrl}
+                      onChange={(event) => {
+                        setImageUrl(event.target.value);
+                        setFormError("");
+                      }}
+                      placeholder="https://example.com/category-image.jpg"
+                      aria-label={`${category.title} image URL`}
+                      disabled={Boolean(busyKey)}
+                    />
+                  )}
 
-                  <button type="button" className="wi-save" onClick={() => save(image)} disabled={edit.saving}>
-                    {edit.saving ? "Saving..." : "Save"}
-                  </button>
+                  {formError && <p className="category-image-error" role="alert">{formError}</p>}
+
+                  <div className="category-image-editor-actions">
+                    <button type="button" onClick={resetEditor} disabled={Boolean(busyKey)}>
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="is-primary"
+                      onClick={() => saveCategoryImage(category)}
+                      disabled={Boolean(busyKey)}
+                    >
+                      {isBusy ? "Saving…" : "Save image"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </article>
         );
       })}
     </div>
