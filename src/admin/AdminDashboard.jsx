@@ -5067,8 +5067,8 @@ return (
 
     {/* MARKETING BANNERS */}
     {activeTab === "banners" && (
-      <div className="admin-table-card">
-        <div className="admin-table-heading">
+      <div className="admin-table-card marketing-banner-card">
+        <div className="admin-table-heading marketing-section-heading">
           <div>
             <h3>Website Marketing Banners</h3>
             <span>{banners.length} banners</span>
@@ -5090,7 +5090,7 @@ return (
           <div className="admin-empty">No marketing banners added yet.</div>
         ) : (
           <div className="admin-table-scroll">
-            <table className="admin-table">
+            <table className="admin-table marketing-banner-table">
               <thead>
                 <tr>
                   <th scope="col">Preview</th>
@@ -5162,8 +5162,8 @@ return (
 
     {/* PROMOTIONAL OFFER */}
     {activeTab === "offer" && (
-      <div className="admin-table-card">
-        <div className="admin-table-heading">
+      <div className="admin-table-card marketing-offer-card">
+        <div className="admin-table-heading marketing-section-heading">
           <div>
             <h3>Promotional Offer Bar</h3>
             <p>The promotional message displayed across the top of your website.</p>
