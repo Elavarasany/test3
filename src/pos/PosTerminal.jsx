@@ -487,6 +487,23 @@ function ProcurementHistory({ purchaseOrderId }) {
 
 function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNotice, onError }) {
   const [activeInventorySection, setActiveInventorySection] = useState("inventory-stock-count");
+  useEffect(() => {
+    const sectionIds = [
+      "inventory-stock-count", "inventory-procurement",
+      ...(staffRole === "ADMIN" ? ["inventory-payables"] : []),
+      "inventory-variants", "inventory-adjustment",
+      "inventory-current-stock", "inventory-movements",
+    ];
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || typeof IntersectionObserver === "undefined") return undefined;
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0]) setActiveInventorySection(visible[0].target.id);
+    }, { rootMargin: "-185px 0px -65% 0px", threshold: 0 });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [staffRole]);
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState("");
