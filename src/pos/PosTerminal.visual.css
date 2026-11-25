@@ -1637,7 +1637,7 @@
   top: 136px;
   z-index: 45;
   width: calc(100% + 2 * clamp(16px, 3vw, 42px));
-  margin: -2px calc(-1 * clamp(16px, 3vw, 42px)) 2px;
+  margin: -18px calc(-1 * clamp(16px, 3vw, 42px)) 2px;
   padding: 7px clamp(16px, 3vw, 42px);
   border-top: 1px solid #e6ebf1;
   border-bottom: 1px solid #dfe5ed;
