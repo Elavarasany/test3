@@ -1698,12 +1698,19 @@
   top: 0;
   z-index: 60;
   background: #fff;
+  border-bottom: 1px solid #e2e8f0;
 }
 .pos-app > .pos-shell-header > .pos-topbar {
   position: relative;
   top: auto;
   z-index: auto;
+  min-height: 64px;
+  padding: 0 16px;
+  border-bottom: 0;
+  box-shadow: none;
 }
+.pos-app > .pos-shell-header .pos-brand strong { font-size: 20px; font-weight: 800; }
+.pos-app > .pos-shell-header .pos-brand small { font-size: 10px; }
 .pos-app > .pos-shell-header > .pos-sticky-nav {
   position: relative;
   top: auto;
@@ -1763,8 +1770,8 @@
   background: transparent;
   color: #596a80;
   font: inherit;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   white-space: nowrap;
 }
 .pos-app .pos-shell-header .pos-inventory-subnav-link svg { color: #8794a5; }
