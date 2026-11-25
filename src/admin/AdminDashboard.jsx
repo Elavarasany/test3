@@ -5112,7 +5112,7 @@ return (
                         <img
                           src={banner.imageUrl}
                           alt=""
-                          className="admin-banner-thumb"
+                          className="admin-banner-thumb marketing-banner-thumb"
                         />
                       </td>
                       <td>{banner.title}</td>
@@ -5171,7 +5171,7 @@ return (
         </div>
 
         {offer ? (
-          <div className="admin-offer-summary">
+          <div className="admin-offer-summary marketing-offer-summary">
             <div
               className="admin-offer-preview"
               style={{
