@@ -6,6 +6,7 @@ import {
   ChevronLeft, ChevronRight, Package, ScanLine, ClipboardCheck, Truck, BarChart3, Maximize2, Minimize2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { createPortal } from "react-dom";
 import "./PosTerminal.css";
 import "./PosTerminal.visual.css";
 import { API_BASE_URL } from "../config/api";
@@ -485,7 +486,7 @@ function ProcurementHistory({ purchaseOrderId }) {
   );
 }
 
-function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNotice, onError }) {
+function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNotice, onError, navHost }) {
   const [activeInventorySection, setActiveInventorySection] = useState("inventory-stock-count");
   useEffect(() => {
     const sectionIds = [
@@ -500,7 +501,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
       const visible = entries.filter((entry) => entry.isIntersecting)
         .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
       if (visible[0]) setActiveInventorySection(visible[0].target.id);
-    }, { rootMargin: "-185px 0px -65% 0px", threshold: 0 });
+    }, { rootMargin: "-145px 0px -65% 0px", threshold: 0 });
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [staffRole]);
@@ -1624,31 +1625,35 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
   })));
 
   return (
+    <>
+      {navHost && createPortal(
+              <nav className="pos-inventory-subnav" aria-label="Inventory sections">
+                <div className="pos-inventory-subnav-inner">
+                  {[
+                    { id: "inventory-stock-count", label: "Physical stock count", icon: ClipboardCheck },
+                    { id: "inventory-procurement", label: "Supplier procurement", icon: Truck },
+                    ...(staffRole === "ADMIN" ? [{ id: "inventory-payables", label: "Accounts payable", icon: CreditCard }] : []),
+                    { id: "inventory-variants", label: "Create variant & Receive", icon: Plus },
+                    { id: "inventory-adjustment", label: "Stock adjustment", icon: FileText },
+                    { id: "inventory-current-stock", label: "Current stock by variant", icon: Package },
+                    { id: "inventory-movements", label: "Stock movement history", icon: History },
+                  ].map((item, index, items) => {
+                    const Icon = item.icon;
+                    return <span key={item.id} className="pos-inventory-subnav-item"><button type="button"
+                      className={`pos-inventory-subnav-link ${activeInventorySection === item.id ? "active" : ""}`}
+                      aria-current={activeInventorySection === item.id ? "location" : undefined}
+                      onClick={() => {
+                        setActiveInventorySection(item.id);
+                        document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}>
+                      <Icon size={14} /> <span>{item.label}</span>
+                    </button>{index < items.length - 1 && <span className="pos-inventory-subnav-separator">/</span>}</span>;
+                  })}
+                </div>
+              </nav>
+      , navHost)}
     <section className="pos-inventory-workspace">
-      <nav className="pos-inventory-subnav" aria-label="Inventory sections">
-        <div className="pos-inventory-subnav-inner">
-          {[
-            { id: "inventory-stock-count", label: "Physical stock count", icon: ClipboardCheck },
-            { id: "inventory-procurement", label: "Supplier procurement", icon: Truck },
-            ...(staffRole === "ADMIN" ? [{ id: "inventory-payables", label: "Accounts payable", icon: CreditCard }] : []),
-            { id: "inventory-variants", label: "Create variant & Receive", icon: Plus },
-            { id: "inventory-adjustment", label: "Stock adjustment", icon: FileText },
-            { id: "inventory-current-stock", label: "Current stock by variant", icon: Package },
-            { id: "inventory-movements", label: "Stock movement history", icon: History },
-          ].map((item) => {
-            const Icon = item.icon;
-            return <button key={item.id} type="button"
-              className={`pos-inventory-subnav-link ${activeInventorySection === item.id ? "active" : ""}`}
-              aria-current={activeInventorySection === item.id ? "location" : undefined}
-              onClick={() => {
-                setActiveInventorySection(item.id);
-                document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}>
-              <Icon size={14} /> <span>{item.label}</span>
-            </button>;
-          })}
-        </div>
-      </nav>
+
       <div className="pos-inventory-intro">
         <div><span className="pos-eyebrow">CATALOGUE & STOCK CONTROL</span><h2>Inventory setup</h2><p>Create sellable variants and receive physical stock into the selected store location.</p></div>
         <button type="button" className="pos-button secondary compact" onClick={() => { loadProducts(); onRefreshCatalog(); }} disabled={productsLoading || variantsLoading}><RefreshCw size={15} /> Refresh inventory</button>
@@ -2136,6 +2141,7 @@ function InventoryPanel({ locationId, catalog, staffRole, onRefreshCatalog, onNo
         </div>
       </section>
     </section>
+    </>
   );
 }
 
@@ -2171,6 +2177,7 @@ export default function PosTerminal() {
   const [catalogLoading, setCatalogLoading] = useState(false);
   const [locationsLoading, setLocationsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("checkout");
+  const [inventoryNavHost, setInventoryNavHost] = useState(null);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [selectedVariants, setSelectedVariants] = useState({});
@@ -3468,7 +3475,8 @@ export default function PosTerminal() {
 
   return (
     <main className="pos-app">
-      <header className="pos-topbar">
+      <header className="pos-shell-header">
+      <div className="pos-topbar">
         <div className="pos-brand">
           {staffRole === "ADMIN" && (
             <button type="button" className="pos-back-button" onClick={() => navigate("/admin/dashboard")} aria-label="Back to admin dashboard"><ArrowLeft size={18} /></button>
@@ -3483,9 +3491,7 @@ export default function PosTerminal() {
           </label>
           <span className="pos-cashier"><UserRound size={16} /> {sessionStorage.getItem("adminUsername") || "Cashier"} · {staffRole}</span>
         </div>
-      </header>
-
-      <div className="pos-page">
+      </div>
         <nav className="pos-sticky-nav" aria-label="POS sections">
           <div className="pos-sticky-nav-inner">
             <button type="button" className={`pos-tab-button ${activeTab === "checkout" ? "active" : ""}`} onClick={() => setActiveTab("checkout")}><ShoppingCart size={17} /> New sale</button>
@@ -3498,6 +3504,11 @@ export default function PosTerminal() {
             {canViewHistory && <button type="button" className={`pos-tab-button ${activeTab === "stale-payment-review" ? "active" : ""}`} onClick={() => setActiveTab("stale-payment-review")}><Clock3 size={17} /> Payment review</button>}
           </div>
         </nav>
+      <div className="pos-inventory-subnav-host" ref={setInventoryNavHost} />
+      </header>
+
+      <div className="pos-page">
+
 
         {error && <div className="pos-alert error" role="alert"><AlertCircle size={18} /><span>{error}</span><button type="button" onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         {notice && <div className="pos-alert success" role="status"><CheckCircle2 size={18} /><span>{notice}</span><button type="button" onClick={() => setNotice("")} aria-label="Dismiss notice"><X size={16} /></button></div>}
@@ -3719,7 +3730,7 @@ export default function PosTerminal() {
             </aside>
           </div>
         ) : activeTab === "inventory" ? (
-          <InventoryPanel locationId={locationId} catalog={catalog} staffRole={staffRole} onRefreshCatalog={loadCatalog} onNotice={setNotice} onError={setError} />
+          <InventoryPanel locationId={locationId} catalog={catalog} staffRole={staffRole} onRefreshCatalog={loadCatalog} onNotice={setNotice} onError={setError} navHost={inventoryNavHost} />
         ) : activeTab === "shift-history" ? (
           <section className="pos-history-panel pos-report-panel">
             <div className="pos-panel-heading">
