@@ -141,7 +141,7 @@ const EMPTY_BOOKING = { name: "", phone: "", email: "", date: "", slot: "" };
 const FALLBACK_IMAGES = {
   product: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=600",
   hero: "",
-  store: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1000",
+  store: "",
 };
 
 const DEFAULT_OFFER_COLORS = { background: "#172554", text: "#FFFFFF" };
@@ -3661,12 +3661,14 @@ const cartTotal = cart.reduce(
         {/* STORE */}
         <section className="store-section" id="store" aria-labelledby="store-heading">
           <div className="store-image">
-            <FallbackImage
-              src={websiteImages.STORE || FALLBACK_IMAGES.store}
-              fallback={FALLBACK_IMAGES.store}
-              alt="Eyewear showroom"
-              loading="lazy"
-            />
+            {websiteImages.STORE && (
+              <img
+                src={websiteImages.STORE}
+                alt="Eyewear showroom"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
           </div>
 
           <div className="store-content">
