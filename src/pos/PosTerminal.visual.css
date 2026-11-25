@@ -1690,3 +1690,107 @@
   .pos-app .pos-inventory-subnav { top: 126px; }
   .pos-app .pos-inventory-subnav-link { min-height: 36px; padding: 0 10px; }
 }
+
+
+/* Inventory navigation follows the reference: both navigation rows share one sticky header. */
+.pos-app > .pos-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: #fff;
+}
+.pos-app > .pos-shell-header > .pos-topbar {
+  position: relative;
+  top: auto;
+  z-index: auto;
+}
+.pos-app > .pos-shell-header > .pos-sticky-nav {
+  position: relative;
+  top: auto;
+  z-index: auto;
+  width: 100%;
+  margin: 0;
+  padding: 7px 16px;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  background: #fff;
+}
+.pos-app > .pos-shell-header .pos-sticky-nav-inner {
+  width: min(1720px, 100%);
+  margin: 0 auto;
+}
+.pos-app .pos-inventory-subnav-host:empty { display: none; }
+.pos-app .pos-shell-header .pos-inventory-subnav {
+  position: relative;
+  top: auto;
+  z-index: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 0;
+  background: #f8fafc;
+  backdrop-filter: none;
+}
+.pos-app .pos-shell-header .pos-inventory-subnav-inner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: min(1720px, 100%);
+  margin: 0 auto;
+  padding: 6px 16px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.pos-app .pos-shell-header .pos-inventory-subnav-inner::-webkit-scrollbar { display: none; }
+.pos-app .pos-shell-header .pos-inventory-subnav-item {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+}
+.pos-app .pos-shell-header .pos-inventory-subnav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: #596a80;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pos-app .pos-shell-header .pos-inventory-subnav-link svg { color: #8794a5; }
+.pos-app .pos-shell-header .pos-inventory-subnav-link:hover {
+  background: #fff;
+  color: #1d4ed8;
+}
+.pos-app .pos-shell-header .pos-inventory-subnav-link.active {
+  border-color: #e2e8f0;
+  background: #fff;
+  color: #1d4ed8;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(15,23,42,.06);
+}
+.pos-app .pos-shell-header .pos-inventory-subnav-link.active svg { color: #2563eb; }
+.pos-app .pos-shell-header .pos-inventory-subnav-separator {
+  color: #cbd5e1;
+  font-size: 11px;
+  user-select: none;
+}
+.pos-app .pos-inventory-workspace [id^="inventory-"] { scroll-margin-top: 150px; }
+
+@media (max-width: 850px) {
+  .pos-app > .pos-shell-header > .pos-sticky-nav { top: auto; }
+  .pos-app .pos-shell-header .pos-inventory-subnav-inner { padding-left: 16px; padding-right: 16px; }
+}
+@media (max-width: 520px) {
+  .pos-app > .pos-shell-header > .pos-sticky-nav { margin: 0; }
+}
