@@ -4082,3 +4082,185 @@
     font-size: 12px;
   }
 }
+
+
+/* =========================================
+   MARKETING BANNERS + PROMOTIONAL OFFER
+   Consistent card spacing, table alignment and responsive offer details.
+========================================= */
+.marketing-banner-card,
+.marketing-offer-card {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.marketing-section-heading {
+  min-height: 84px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--admin-border);
+  align-items: center;
+}
+
+.marketing-section-heading > div {
+  min-width: 0;
+}
+
+.marketing-section-heading h3 {
+  line-height: 1.35;
+}
+
+.marketing-section-heading p {
+  line-height: 1.5;
+}
+
+.marketing-section-heading .admin-primary-button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.marketing-banner-table {
+  width: 100%;
+  min-width: 780px;
+  table-layout: fixed;
+}
+
+.marketing-banner-table th,
+.marketing-banner-table td {
+  padding: 14px 18px;
+  vertical-align: middle;
+}
+
+.marketing-banner-table th:nth-child(1),
+.marketing-banner-table td:nth-child(1) {
+  width: 140px;
+}
+
+.marketing-banner-table th:nth-child(2),
+.marketing-banner-table td:nth-child(2) {
+  width: 24%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.marketing-banner-table th:nth-child(3),
+.marketing-banner-table td:nth-child(3) {
+  width: 25%;
+  white-space: normal;
+  line-height: 1.45;
+}
+
+.marketing-banner-table th:nth-child(4),
+.marketing-banner-table td:nth-child(4) {
+  width: 90px;
+  text-align: center;
+}
+
+.marketing-banner-table th:nth-child(5),
+.marketing-banner-table td:nth-child(5) {
+  width: 115px;
+  text-align: center;
+}
+
+.marketing-banner-table th:last-child,
+.marketing-banner-table td:last-child {
+  width: 120px;
+  text-align: center;
+}
+
+.marketing-banner-thumb {
+  display: block;
+  width: 104px;
+  height: 58px;
+  object-fit: cover;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.marketing-banner-table .admin-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.marketing-offer-summary {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.8fr) repeat(3, minmax(120px, 1fr));
+  align-items: stretch;
+  gap: 14px;
+  padding: 22px 24px;
+}
+
+.marketing-offer-summary .admin-offer-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 76px;
+  margin: 0;
+  padding: 16px 18px;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.marketing-offer-summary > p {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 76px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--admin-border);
+  border-radius: 9px;
+  background: #fafbfc;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.marketing-offer-summary > p strong {
+  margin-bottom: 5px;
+  color: var(--admin-navy);
+  font-size: 12px;
+}
+
+.marketing-offer-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 24px 22px;
+}
+
+@media (max-width: 1050px) {
+  .marketing-offer-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .marketing-offer-summary .admin-offer-preview {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 650px) {
+  .marketing-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px 16px;
+  }
+
+  .marketing-offer-summary {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+
+  .marketing-offer-summary .admin-offer-preview {
+    grid-column: auto;
+  }
+
+  .marketing-offer-footer {
+    padding: 0 16px 18px;
+  }
+}
