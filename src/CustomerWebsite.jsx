@@ -146,7 +146,7 @@ const EMPTY_BOOKING = { name: "", phone: "", email: "", date: "", slot: "" };
 
 const FALLBACK_IMAGES = {
   product: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=600",
-  hero: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1200",
+  hero: "https://i.pinimg.com/1200x/8a/6e/64/8a6e64cb9c1b4ddefda6384f542a6695.jpg",
   store: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1000",
 };
 
